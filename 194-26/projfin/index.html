@@ -1,0 +1,382 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <title>cs 194-26 final project submission.</title>
+        <style type="text/css">
+            body {
+                  background-image: url("bg.jpg");
+                  background-repeat: no-repeat;
+                  background-attachment: fixed;
+                  background-size: cover;
+                  font-family: 'Comic Sans MS', 'Comic Sans'; 
+                  color: white;
+            }
+            p { font-family: 'Comic Sans MS', 'Comic Sans'; } 
+            h1 { font-family: 'Comic Sans MS', 'Comic Sans'; }
+            h2 { font-family: 'Comic Sans MS', 'Comic Sans'; }
+            div { max-width: 70%; margin: auto; }
+            b { color: limegreen; }
+            img { width: 400px; height: auto; }
+            table {border: 1;}
+            a:link {
+                color: cyan;
+            }
+            a:visited {
+                color: teal;
+            }
+        </style>
+        <meta property="og:title" content="CS 194-26 Final Project" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://guineawheek.github.io/194-26/projfin/" />
+        <meta property="og:image" content="https://guineawheek.github.io/194-26/projfin/bg_card.jpg" />
+        <meta property="og:description" content="I wish, that I could turn back time..." />
+        <meta name="theme-color" content="#883fa9">
+
+        <!-- Include this to make the og:image larger -->
+        <meta name="twitter:card" content="summary_large_image">
+    </head>
+    <body>
+        <div>
+        <h1>CS 194-26 Final Project (canned)</h1>
+
+        <h3>thank god</h3>
+
+        <!--
+
+Part 1:
+
+Show samples of data loader (5 points)
+Plot train and validation loss (5 points)
+Show how hyper parameters effect results (5 points)
+Show 2 success/failure cases (5 points)
+
+Part 2:
+
+Show samples of data loader (5 points)
+Report detailed architecture (5 points)
+Plot train and validation loss (5 points)
+Show 2 success/failure cases (5 points)
+Visualize learned features (5 points)
+
+Part 3:
+
+Submit a working model to Kaggle competition (15 points)
+Report detailed architecture (10 points)
+Plot train and validation loss (10 points)
+Visualize results on test set (10 points)
+Run on at least 3 of your own photos (10 points) -->
+
+        <h1>
+        Canned Project A: Poor man's augmented reality
+        </h1>
+
+        <h2>Input video</h2>
+        <p>
+            I didn't have a shoebox so I printed out a checkerboard pattern and hand-made a cube with scissors.
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> 
+                        <video width="640" height="360" src="projar/img/box3.mp4" autoplay muted loop>
+                        <a href="projar/img/box3.mp4">box3.mp4</a> 
+                        </video>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </p>
+
+        <h2>Keypoints</h2>
+        <p>
+        I hand-labeled these using ginput. 
+        Then, I propogated the keypoints using the CSRT tracker as I found this worked the best for my video.
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> 
+                        <a href="projar/out/pts.png">
+                            <img src="projar/out/pts.png" style="width: 50%"/>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    Here's my labeled points (click on the image for fullsize)
+                    </td>
+                </tr>
+                <tr>
+                    <td> 
+                        <video width="640" height="360" src="projar/out/box3_pts.mp4" autoplay muted loop>
+                        <a href="projar/out/box3_pts.mp4">box3_pts.mp4</a> 
+                        </video>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    Here's the points propogating through an image.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </p>
+
+        <h2>Camera calibration</h2>
+        <p>
+            We setup the 3x4 camera matrix problem as shown below. 
+            Note that we fix m_34 to 1 to sufficiently constrain the least squares problem as formualted below. (it works ok)
+            <img src="img/cam_eqn.png" style="width: 75%"/>
+        </p>
+
+        <h2>Projecting a cube into the scene</h2>
+        <p>
+            Below is the projected axes and projected cube. I had to reorder the rendering order a little to fix occlusion.
+        <table border="1">
+            <tbody>
+                    <td> 
+                        <video width="640" height="360" src="projar/out/box3_axes.mp4" autoplay muted loop>
+                        <a href="projar/out/box3_axes.mp4">box3_axes.mp4</a> 
+                        </video>
+                    </td>
+                <tr>
+                    <td>
+                    Here's my labeled points (click on the image for fullsize)
+                    </td>
+                </tr>
+                <tr>
+                    <td> 
+                        <video width="640" height="360" src="projar/out/box3_cube.mp4" autoplay muted loop>
+                        <a href="projar/out/box3_cube.mp4">box3_cube.mp4</a> 
+                        </video>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    Here's the cube!
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        </p>
+        <h2>Summary for project A</h2>
+        <p>
+            Overall, it works. I was tempted to do something with pyrender, but pyrender is disproportionately annoying to use.
+        </p>
+        <!--
+
+            \begin{bmatrix}
+\lambda x\\ \lambda y\\\lambda
+\end{bmatrix} &= 
+\begin{bmatrix}
+m_{11}& m_{12}& m_{13}& m_{14}\\
+m_{21}& m_{22}& m_{23}& m_{24}\\
+m_{31}& m_{32}& m_{33}& m_{34}\\
+\end{bmatrix}\begin{bmatrix}X\\Y\\Z\\1\end{bmatrix}\\
+\lambda &= m_{31}X + m_{32}Y + m_{33}Y + m_{34}\\
+m_{11}X + m_{12}Y + m_{13}Z + m_{14} &= m_{31}Xx + m_{32}Yx + m_{33}Zx + m_{34}x\\
+ mult = lambda i, v: print(" + ".join([f"m_{{{i}{j}}}{vv}" for j, vv in enumerate(v, 1)]) + "\\\\")
+
+        -->
+
+        <h1>Project B: Tour into the Picture</h1> 
+
+
+        <h2>Input images</h2>
+        <p>
+            I took some pictures around Cory and Soda. Admittedly, the images aren't exactly to assumptions, 
+            but it's the best I could do.
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> 
+                        <a href="projtip/img/soda.jpg">
+                            <img src="projtip/img/soda.jpg" style="max-height: 640px; max-width: 480px;"/>
+                        </a>
+                    </td>
+                    <td> 
+                        <a href="projtip/img/cory_basement.jpg">
+                            <img src="projtip/img/cory_basement.jpg" style="max-height: 640px; max-width: 480px;"/>
+                        </a>
+                    </td>
+                    <td> 
+                        <a href="projtip/img/cory_second.jpg">
+                            <img src="projtip/img/cory_second.jpg" style="max-height: 640px; max-width: 480px;"/>
+                        </a>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td> soda hall </td>
+                    <td> cory basement </td>
+                    <td> cory second floor </td>
+                </tr>
+            </tbody>
+        </table>
+
+        </p>
+
+        <h2>
+            Novel viewpoints
+        </h2>
+        <p>
+            For these viewpoints, I basically hand-guessed depths for the image that seemed decent by editing config files for each image, 
+            after picking a back wall and a vanishing point.
+        </p>
+        <p>
+        I used pyrender to create an inner box to render all the image panels onto, and then used it as a 3d viewer to take screencaps with.
+        Surprisingly, this was pure pain. 
+        </p>
+
+        <p>
+        I had to hand-craft a trimesh of the inner box. 
+        Did you know that the Y axis goes upwards in 3d coordinates? 
+        I didn't realize that at first.
+        </p>
+        
+        <p>
+        Mapping the uv coordinates from a generated image texture of the walls to the room mesh was also "fun." 
+        I found it most useful to create four individual box vertices per wall even though some vertices were in the same spot,
+        to map different corners of the stitched and projected image onto, as the uv coordinate pairs we pass into pyrender/trimesh 
+        correspond to specific vertices at the same list index.
+        </p>
+
+        <p>
+        The uv coordinates corresponding to a point in the texture are scaled from 0.0 to 1.0 where u is positive x from the left side
+        of the image to the right of the image, while v is positive y from the <b>bottom</b> edge the image to the top edge, the reverse of 
+        most image indexing conventions up to this point. 
+        This was infuriating to figure out, since I was basically crash coursing 3d rendering from scratch.
+        </p>
+
+        <table border="1">
+            <tbody>
+                <tr style="text-align: center;">
+                    <td><a href="projtip/out/uv_mesh.jpg">
+
+                        <img src="projtip/out/uv_mesh.jpg" style="width: 70%"/>
+                    </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        A uv mesh for the sjerome sample image.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> 
+                        <a href="projtip/out/soda1.jpg">
+                            <img src="projtip/out/soda1.jpg" style="max-height: 640px; max-width: 480px;"/>
+                        </a>
+                    </td>
+                    <td> 
+                        <a href="projtip/out/cory_basement1.jpg">
+                            <img src="projtip/out/cory_basement1.jpg" style="max-height: 640px; max-width: 480px;"/>
+                        </a>
+                    </td>
+                    <td> 
+                        <a href="projtip/out/cory_second1.jpg">
+                            <img src="projtip/out/cory_second1.jpg" style="max-height: 640px; max-width: 480px;"/>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td> 
+                        <a href="projtip/out/soda2.jpg">
+                            <img src="projtip/out/soda2.jpg" style="max-height: 640px; max-width: 480px;"/>
+                        </a>
+                    </td>
+                    <td> 
+                        <a href="projtip/out/cory_basement2.jpg">
+                            <img src="projtip/out/cory_basement2.jpg" style="max-height: 640px; max-width: 480px;"/>
+                        </a>
+                    </td>
+                    <td> 
+                        <a href="projtip/out/cory_second2.jpg">
+                            <img src="projtip/out/cory_second2.jpg" style="max-height: 640px; max-width: 480px;"/>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td> soda hall </td>
+                    <td> cory basement </td>
+                    <td> cory second floor </td>
+                </tr>
+            </tbody>
+        </table>
+        </p>
+
+        <h2>Bells and whistles</h2>
+        <h3>Rewriting the starter code</h3>
+        <p>
+            Included in the project submission is a port of the original tip_gui starter code in the file tip_gui.py. 
+            There are some small off-by-one differences (due to differences in indexing) but it's usable.
+        </p>
+        <p>In particular, the code first has you select the back wall and a vanishing point, and lets you re-pick the vanishing point 
+            until you don't select points in ginput by pressing middle click to confirm by visualizing where the box edges lie and how 
+            they converge on the vanishing point. 
+        </p>
+        <table border="1">
+            <tbody>
+                <tr style="text-align: center;">
+                    <td> 
+                        <a href="projtip/out/tip_gui.jpg">
+                            <img src="projtip/out/tip_gui.jpg" style="width: 50%;"/>
+                        </a> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>3D camera tour video</h3>
+        <p>
+            I also rendered a time-varying 3d camera path with pyrender, with the non-interactive renderer 
+            and skvideo.io. This part is actually pretty cool! And I used the reference images which look a lot 
+            better than my terrible and grainy references.  
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> 
+                        <video width="640" height="360" src="projtip/out/camera1.mp4" autoplay muted loop>
+                        <a href="projtip/out/camera1.mp4">camera1.mp4</a> 
+                        </video>
+                    </td>
+                    <td> 
+                        <video width="640" height="360" src="projtip/out/camera2.mp4" autoplay muted loop>
+                        <a href="projtip/out/camera1.mp4">camera2.mp4</a> 
+                        </video>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <div style="height: 90vh; width: 100%; display: flex; vertical-align: middle; justify-content: center; align-items: center; ">
+            <div>
+            <h1>oh my god it's FINALLY over</h1>
+            </div>
+        </div>
+
+        <p>
+            <img style="max-width:88px" src="share/not_ok.png"/>
+            <img style="max-width:88px; max-height: 31px;" src="share/xenia.png"/>
+            <img style="max-width:88px" src="share/boomer_python.png"/>
+            <img style="max-width:88px" src="share/vim.vialle.love.anim.gif"/>
+            <img style="max-width:88px" src="share/gimp.gif"/>
+            <img style="max-width:88px" src="share/madewithlove.gif"/>
+            <img style="max-width:88px" src="share/htmldream.gif"/>
+            <img style="max-width:88px" src="share/miku.gif"/>
+        </p>
+
+        (buttons sourced from <a href="https://cyber.dabamos.de/88x31/">https://cyber.dabamos.de/88x31/</a>)
+        </div>
+
+    
+    </body>
+</html>

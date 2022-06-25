@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <title>CS 194-26 Project 1 Submission!!!</title>
+        <style type="text/css">
+            body {
+                  background-image: url("emir_bg.png");
+                  background-repeat: repeat;
+                  font-family: 'Comic Sans MS'; 
+            }
+            p { font-family: 'Comic Sans MS'; } 
+            h1 { font-family: 'Comic Sans MS'; }
+            h2 { font-family: 'Comic Sans MS'; }
+            div { max-width: 70%; margin: auto; }
+            img { width: 400px; height: auto; }
+        </style>
+    </head>
+    <body>
+        <div>
+        <marquee>
+            <h1>CS 194-26 Project 1: colorizing the Prokudin-Gorskii photo collection</h1>
+        </marquee>
+
+        <h2>Background</h2>
+        <p>
+            As you probably know if you're reading this webpage, the main goal of this project is to take red, blue, and green
+            filtered negatives from the early 20th century and align them into color images. <b>Sounds simple enough, right?</b>
+        </p>
+        <p>
+            The general way we do this, is to take the source plates, and create some algorithm to automatically align them. This can be 
+            accomplished by doing a grid search of possible alignments, and comparing them by some metric such as sum of squared differences. 
+            Of course, this can run into runtime issues at high resolutions, so one can use an image pyramid where the images are recursively aligned
+            at lower resolutions, and the lower resolution alignments are used as starting points for the higher resolutions so they can be aligned over 
+            smaller (and more tractable) search spaces. And that's basically what we do here.
+        </p>
+
+        <h2>The small images</h2>
+        <p>
+            Throughout this project, I just used sum of squared differences on raw pixels. I was going to consider edge detection, but I got 
+            good results with SSD with some tweaking, so further exploration did not seem necessary. Some experimentation was done with sum of absolute
+            differences to potentially ignore outliers, but it seemed to make no difference.
+        </p>
+        <p>
+            For the small resolution images, a very naive alignment method is used. The green and red plates are aligned by rolling them over the blue plate over
+            a range of -30 to 30 pixel alignments, and the best alignment is found with SSD. The border edges are cropped off using a fixed 10% of image width margin,
+            and not even the rolled-over pixels from np.roll are cropped off. Somehow, the results seem to be quite solid.
+        </p>
+
+        <h2>The large images</h2>
+        <p>
+            The high resolution images are much more demanding. The images are normalized by intensity before being compared with the SSD, which helped a little bit.
+            Additionally, the rolled-over edges of the image to be aligned in the high resolution algorithm are properly taken out of SSD calculations. There are some 
+            runtime hacks such as only comparing at maximum 750,000 pixels at an image pyramid resolution. I found that the best downsample cutoff was somewhere under 
+            256 pixels in height. For certain images such as <b>church.tif </b>and <b>lady.tif</b>, alignment was best achieved when the two highest resolution SSD passes in the image pyramid
+            algorithm were skipped -- I suspect this is because higher alignment passes are more sensitive to small outliers from having lots of pixels to worry about.
+        </p>
+
+        <p>
+            But the biggest reason why I got good results was because instead of aligning the red and green plates to the blue plate, <b>I aligned the red and blue 
+            plates to the green plate.</b> That was the major change that made even the Emir image line up. Everything else helped, but this was pretty much the reason.
+            My hypothesis is that the red and blue plates are more similar in brightness profiles to the green plate than they are to just each other. It shouldn't 
+            work this well, but it does and I find that absolutely hysterical.
+        </p>
+
+
+        <h2>Bells and Whistles</h2>
+        <p>
+         There's an autocropping algorithm that functions by polling each edge of the image at multiple locations, marching inwards until it sees two major intensity 
+         changes (a poor man's sharp derivatives, essentially), and then takes the median of the recorded values and uses those to crop off the edges. Additionally,
+         the rolling from aligned plates is cropped off. It doesn't work perfectly all the time, given that its large derivative detection is incredibly naive and purely
+         hard threshold based, but it functions quite decently on many images. On large images, a downscaled version of the input image is used for calculations. Below is a 
+         demonstration on the emir image.
+        </p>
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="emir.jpg"><img src="emir.jpg"/></a>
+                    </td>
+                    <td>
+                        <a href="output/emir.jpg"><img src="output/emir.jpg"/></a>
+                    </td>
+                </tr>
+                <tr><td>Uncropped emir</td><td>Cropped emir</td></tr>
+            </tbody>
+        </table>
+
+        <h2>The provided example images, with plate alignments</h2>
+        <h5>(in pixels)</h5>
+
+        <table border="1">
+            <tbody>
+                <thead>
+                    <tr>
+                        <th colspan="3"> <h3>The small jpg images</h3> </th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><a href="output/cathedral.jpg"><img src="output/cathedral.jpg"/></a></td>
+                    <td><a href="output/monastery.jpg"><img src="output/monastery.jpg"/></a></td>
+                    <td><a href="output/tobolsk.jpg">  <img src="output/tobolsk.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <td>cathedral.jpg: red: (-4, 1), blue: (6, -2)</td>
+                    <td>monastery.jpg: red: (-3, 1), blue: (12, -2)</td>
+                    <td>tobolsk.jpg: red: (-6, 1), blue: (7, -3)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!--
+                    <td><a href="output/z.jpg"><img src="output/z.jpg"/></a></td>
+        -->
+
+        <p>
+        <table border="1">
+            <tbody>
+                <thead>
+                    <tr>
+                        <th colspan="3"> <h3>The large tif images</h3> </th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><a href="output/church.jpg"><img src="output/church.jpg"/></a></td>
+                    <td><a href="output/emir.jpg"><img src="output/emir.jpg"/></a></td>
+                    <td><a href="output/harvesters.jpg"><img src="output/harvesters.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <td>church.tif: red: (-112, -8), blue: (120, -4)</td>
+                    <!--<td>castle.tif: red: (-128, 5), blue: (165, -4)     </td> -->
+                    <td>emir.tif: red: (-134, 19), blue: (144, -27)     </td>
+                    <td>harvesters.tif: red: (-64, -1), blue: (74, -21) </td>
+                </tr>
+                <tr>
+                    <td><a href="output/icon.jpg"><img src="output/icon.jpg"/></a></td>
+                    <td><a href="output/lady.jpg"><img src="output/lady.jpg"/></a></td>
+                    <td><a href="output/melons.jpg"><img src="output/melons.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <td>icon.tif: red: (4, 5), blue: (8, -20)</td>
+                    <td>lady.tif: red: (-132, 4), blue: (140, -8)</td>
+                    <td>melons.tif: red: (-100, 5), blue: (118, -8)</td>
+                </tr>
+                <tr>
+                    <td><a href="output/onion_church.jpg"><img src="output/onion_church.jpg"/></a></td>
+                    <td><a href="output/self_portrait.jpg"><img src="output/self_portrait.jpg"/></a></td>
+                    <td><a href="output/three_generations.jpg"><img src="output/three_generations.jpg"/></a></td>
+
+                </tr>
+                <tr>
+                    <td>onion_church.tif: red: (-63, 9), blue: (78, -32)</td>
+                    <td>self_portrait.tif: red: (-100, 8), blue: (123, -33)</td>
+                    <td>three_generations.tif: red: (-78, -4), blue: (95, -20)</td>
+                </tr>
+                <tr>
+                    <td><a href="output/train.jpg"><img src="output/train.jpg"/></a></td>
+                    <td><a href="output/workshop.jpg"><img src="output/workshop.jpg"/></a></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>train.tif: red: (-150, 23), blue: (160, -9)</td>
+                    <td>workshop.tif: red: (-142, -10), blue: (144, -4)</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        </p>
+
+        <p>
+        <table border="1">
+            <tbody>
+                <thead>
+                    <tr>
+                        <th colspan="3"> <h3>Selected images from the collection</h3> </th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><a href="output/select/conservatory.jpg"><img src="output/select/conservatory.jpg"/></a></td>
+                    <td><a href="output/select/etruscan.jpg"><img src="output/select/etruscan.jpg"/></a></td>
+                    <td><a href="output/select/roses.jpg">  <img src="output/select/roses.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <td>conservatory.tif: red: (-132, 7), blue: (142, -31)</td>
+                    <td>etruscan.tif: red: (-59, 8), blue: (122, -9)</td>
+                    <td>roses.tif: red: (-71, 16), blue: (97, -22)</td>
+                </tr>
+            </tbody>
+        </table>
+        </p>
+
+        <p>
+            You made it to the end! yay!
+        </p>
+
+        <p>
+            <img style="max-width:88px" src="share/boomer_python.png"/>
+            <img style="max-width:88px" src="share/linuxnow2.gif"/>
+            <img style="max-width:88px" src="share/vim.vialle.love.anim.gif"/>
+            <img style="max-width:88px" src="share/madewithlove.gif"/>
+            <img style="max-width:88px" src="share/htmldream.gif"/>
+        </p>
+
+        (buttons sourced from <a href="https://cyber.dabamos.de/88x31/">https://cyber.dabamos.de/88x31/</a>)
+        </div>
+    </body>
+</html>

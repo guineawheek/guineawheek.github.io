@@ -1,0 +1,368 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <title>cs 194-26 project 5 submission.</title>
+        <style type="text/css">
+            body {
+                  background-image: url("bg.jpg");
+                  background-repeat: no-repeat;
+                  background-attachment: fixed;
+                  background-size: cover;
+                  font-family: 'Comic Sans MS', 'Comic Sans'; 
+                  color: white;
+            }
+            p { font-family: 'Comic Sans MS', 'Comic Sans'; } 
+            h1 { font-family: 'Comic Sans MS', 'Comic Sans'; }
+            h2 { font-family: 'Comic Sans MS', 'Comic Sans'; }
+            div { max-width: 70%; margin: auto; }
+            b { color: limegreen; }
+            img { width: 400px; height: auto; }
+            table {border: 1;}
+            a:link {
+                color: cyan;
+            }
+            a:visited {
+                color: teal;
+            }
+        </style>
+        <meta property="og:title" content="CS 194-26 Project 5 submission" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://guineawheek.github.io/194-26/proj5/" />
+        <meta property="og:image" content="https://guineawheek.github.io/194-26/proj5/bg_card.jpg" />
+        <meta property="og:description" content="letting machines learn was a mistake" />
+        <meta name="theme-color" content="#5ddc91">
+
+        <!-- Include this to make the og:image larger -->
+        <meta name="twitter:card" content="summary_large_image">
+    </head>
+    <body>
+        <div>
+        <marquee>
+            <h1>CS 194-26 Project 5: Facial Keypoint Detection with Neural Networks </h1>
+        </marquee>
+
+        <marquee direction="right">
+            <h3>i hate machine learning i hate machine learning i hate machine learning i hate machine learning i hate machine learning i hate machine learning </h3>
+        </marquee>
+
+        <!--
+
+Part 1:
+
+Show samples of data loader (5 points)
+Plot train and validation loss (5 points)
+Show how hyper parameters effect results (5 points)
+Show 2 success/failure cases (5 points)
+
+Part 2:
+
+Show samples of data loader (5 points)
+Report detailed architecture (5 points)
+Plot train and validation loss (5 points)
+Show 2 success/failure cases (5 points)
+Visualize learned features (5 points)
+
+Part 3:
+
+Submit a working model to Kaggle competition (15 points)
+Report detailed architecture (10 points)
+Plot train and validation loss (10 points)
+Visualize results on test set (10 points)
+Run on at least 3 of your own photos (10 points) -->
+
+        <h2>
+        Part 1
+        </h2>
+
+        <h3>Dataloader samples</h3>
+        <p>
+            The dataloader downscales images to 80x60 and into grayscale.
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/dipis/nose.png"><img style="width:200%" src="out/dipis/nose.png"/></a> </td>
+                </tr>
+            </tbody>
+        </table>
+        </p>
+
+        <h3>Train and validation loss for nosenet</h3>
+        <p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/nose_p1/loss.png"><img style="width:100%" src="out/nose_p1/loss.png"/></a> </td>
+                    <td> <a href="out/nose_p2/loss.png"><img style="width:100%" src="out/nose_p2/loss.png"/></a> </td>
+                    <td> <a href="out/nose_p3/loss.png"><img style="width:100%" src="out/nose_p3/loss.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td> train profile nose_p1 </td>
+                    <td> train profile nose_p2 </td> 
+                    <td> train profile nose_p3 </td>
+                </tr>
+            </tbody>
+        </table>
+        </p>
+
+        <h3>Show how hyperparameters affect results</h3>
+        Note that the nose and face models output direct pixels, which is why loss may seem high.
+        <p>
+            The training profiles (nose_p1, nose_p2, nose_3) listed above are as follows:
+            <ol>
+                <li>nose_p1 is the baseline model. 
+                    It uses 3 convolutional layers with 5x5 kernels with channels 32, 24, and 12. 
+                    Each convolutional layer is followed by a maxpool.
+                    There are two fully connected layers.
+                    Each non-last layer is followed by a relu.
+                    The model is trained on 25 epochs with a learning rate of 1e-3 with Adam and MSE loss. 
+
+                    nose_p1 has a validation loss of about <b>16.0</b>.
+                </li>
+                <li>nose_p2 is identical to nose_p1 with a learning rate of 1e-2. This reduces validation loss by a factor of 4 (about <b>4.0</b>).</li>
+                <li>nose_p3 is identical to nose_p1 with 3x3 kernels instead of 5x5s. This reduces validation by about 50% (about <b>10.5</b>).</li>
+            </ol>
+        </p>
+
+        <h3>Show two success/failure cases</h3>
+        <p>
+            Given that nose_p2 was the highest performing profile, we use it for our results. 
+
+            Red dots are predicted while green dots are actual. 
+
+            You can see all results <a href="out/nose">here.</a>
+
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/nose_p2/out1.png"><img style="width:100%" src="out/nose_p2/out1.png"/></a> </td>
+                    <td> <a href="out/nose_p2/out5.png"><img style="width:100%" src="out/nose_p2/out5.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>success on valid1</td>
+                    <td>success on valid5</td>
+                </tr>
+                <tr>
+                    <td> <a href="out/nose_p2/out11.png"><img style="width:100%" src="out/nose_p2/out11.png"/></a> </td>
+                    <td> <a href="out/nose_p2/out12.png"><img style="width:100%" src="out/nose_p2/out12.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>failure on valid11</td>
+                    <td>failure on valid12</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            The reason for failure on the images we were given likely has to do with both the rather small downsampling of the images and the 
+            likely aliasing of higher frequency features that may result. What looks like a nose to a convnet at 80x60 is not actually a nose.
+        </p>
+        <p>
+            Of course, with neural networks, there's often no way to know for certain. (Why did the ML system fail? I don't know.)
+        </p>
+        <!--
+        
+        p2: [epoch 24] tloss: 0.906, vloss: 4.022
+        p3: [epoch 24] tloss: 2.148, vloss: 10.482
+        -->
+        <h2>
+        Part 2
+        </h2>
+
+        <h3>Dataloader samples</h3>
+        <p>
+        The dataloader downscales images to 240x180 and into grayscale. To apply augmentation, we rotate the images by up to 30 degrees and do some np.roll shifting.
+        This was pure pain to get the keypoints to follow.
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/dipis/face.png"><img style="width:100%" src="out/dipis/face.png"/></a> </td>
+                </tr>
+            </tbody>
+        </table>
+        </p>
+
+        <h3>Report detailed architecture</h3>
+
+        The model had 5 conv2d layers and four fully connected layers. Each conv layer had a relu into maxpool and each FC layer had a relu. 
+        The LR was 1e-3, trained across 100 epochs, and using Adam and MSE.
+
+        <ol>
+            <li>conv1:  1 input channel,  96 output channels, 3x3 kernel</li>
+            <li>conv2: 96 input channels, 96 output channels, 3x3 kernel</li>
+            <li>conv3: 96 input channels, 64 output channels, 3x3 kernel</li>
+            <li>conv4: 64 input channels, 32 output channels, 3x3 kernel</li>
+            <li>conv5: 32 input channels, 24 output channels, 3x3 kernel</li>
+        </ol>
+        <ol>
+            <li>fc1:  360 input channel,  240 output channels</li>
+            <li>fc2:  240 input channel,  240 output channels</li>
+            <li>fc3:  240 input channel,  240 output channels</li>
+            <li>fcL:  240 input channel,  116 output channels</li>
+        </ol>
+
+        <h3>Plot train and validation loss</h3>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/face/loss.png"><img style="width:100%" src="out/face/loss.png"/></a> </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Show two success/failure cases</h3>
+        <p>
+            Red dots are predicted while green dots are actual. You can see all results <a href="out/face">here.</a>
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/face/out15.png"><img style="width:100%" src="out/face/out15.png"/></a> </td>
+                    <td> <a href="out/face/out18.png"><img style="width:100%" src="out/face/out18.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>success on valid15</td>
+                    <td>success on valid18</td>
+                </tr>
+                <tr>
+                    <td> <a href="out/face/out38.png"><img style="width:100%" src="out/face/out38.png"/></a> </td>
+                    <td> <a href="out/face/out34.png"><img style="width:100%" src="out/face/out34.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>failure on valid38</td>
+                    <td>failure on valid34</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            If I had to guess, for out34, the eyebrows were too eye-like for the convnet so it read that as eyes and shifted the whole face up.
+            For out38, the model seemed to think the shadow underneath the mouth was a jawline. It seems to struggle with jawlines overall.
+        </p>
+
+
+        <h3>Visualize learned features</h3>
+        The 3x3 patches have been tiled into the images seen here into a (channels_out x channels_in) grid, so the 3x3 patch 
+        conv[n_i, n_o, :, :] lives at the pixels surrounding (x=3*n_i + 1, y=3*n_o + 1)
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/face/vis/conv1_96x1.png"><img  src="out/face/vis/conv1_96x1.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Conv1 (96x1). Note that it's been flattened on its side.</td>
+                </tr>
+                <tr>
+                    <td> <a href="out/face/vis/conv2_96x96.png"><img src="out/face/vis/conv2_96x96.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Conv2 (96x96).</td>
+                </tr>
+                <tr>
+                    <td> <a href="out/face/vis/conv3_64x96.png"><img src="out/face/vis/conv3_64x96.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Conv3 (64x96). </td>
+                </tr>
+                <tr>
+                    <td> <a href="out/face/vis/conv4_32x64.png"><img src="out/face/vis/conv4_32x64.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Conv4 (32x64). </td>
+                </tr>
+                <tr>
+                    <td> <a href="out/face/vis/conv5_24x32.png"><img src="out/face/vis/conv5_24x32.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Conv5 (24x32). </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Part 3</h2>
+        
+<!--Submit a working model to Kaggle competition (15 points)
+Report detailed architecture (10 points)
+Plot train and validation loss (10 points)
+Visualize results on test set (10 points)
+Run on at least 3 of your own photos (10 points) -->
+        <h3>Dataloader samples</h3>
+        <p>
+        The dataloader reshapes the bounding boxes to 224x224 and into grayscale. 
+        To apply augmentation, we randomly enlargen the bounding boxes by up to 20% in each direction.
+        Bounding boxes are also rectified to always contain keypoints before augmentation is applied.
+        Negative bouding box coordinates are filled in with zeros.
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/ibug/ibug_test.png"><img style="width:100%" src="out/ibug/ibug_test.png"/></a> </td>
+                </tr>
+            </tbody>
+        </table>
+        </p>
+
+
+        <h3>Submit a working model to Kaggle competition</h3>
+        This project submission uses the name "Guinea Wheek." The average mean absolute error is around 10.
+        <h3>Report detailed architecture</h3>
+
+        The model was ResNet18 modified to use on its lowest conv layer 1 input channel on a 7x7 kernel with stride 2x2 and padding 3x3. 
+        The output fully connected layer was modified to have 512 input channels to 68*2=136 output channels.
+        The LR was 1e-4, with Adam optimizer and MSE, trained across 25 epochs. 95% of the input dataset is used as training data.
+
+        <h3>Plot train and validation loss</h3>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/ibug/loss.png"><img style="width:100%" src="out/ibug/loss.png"/></a> </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Visualize results on test set</h3>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/ibug/out0.png"><img style="width:100%" src="out/ibug_test/out0.png"/></a> </td>
+                    <td> <a href="out/ibug/out1.png"><img style="width:100%" src="out/ibug_test/out1.png"/></a> </td>
+                    <td> <a href="out/ibug/out3.png"><img style="width:100%" src="out/ibug_test/out3.png"/></a> </td>
+                    <td> <a href="out/ibug/out4.png"><img style="width:100%" src="out/ibug_test/out4.png"/></a> </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Run on at least 3 of your own photos</h3>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/shipis/woz1.png"><img style="width:100%" src="out/shipis/woz1.png"/></a> </td>
+                    <td> <a href="out/shipis/doug1.png"><img style="width:100%" src="out/shipis/doug1.png"/></a> </td>
+                    <td> <a href="out/shipis/wendy1.png"><img style="width:100%" src="out/shipis/wendy1.png"/></a> </td>
+                </tr>
+            </tbody>
+        </table>
+
+        Pictured from left to right is Scott Wozniak, Doug Walker, and a recurring character on the YouTube series "Scott the Woz" known simply as 
+        "the Wendy's employee." The detector manages to do decently well on Scott and Doug's faces, more or less finding the eyes and general face structure,
+        wheras it fails harder on the image of the Wendy's employee. My hypothesis on why the last example fails is because this particular process uses the 
+        bounding box as the full image and tends to choke if there's too much outside data (in particular most bounding boxes do not contain the top of the head). 
+
+        <h2>
+            yare yare daze.
+        </h2>
+
+        <p>
+            <img style="max-width:88px" src="share/boomer_python.png"/>
+            <img style="max-width:88px" src="share/linuxnow2.gif"/>
+            <img style="max-width:88px" src="share/vim.vialle.love.anim.gif"/>
+            <img style="max-width:88px" src="share/gimp.gif"/>
+            <img style="max-width:88px" src="share/madewithlove.gif"/>
+            <img style="max-width:88px" src="share/htmldream.gif"/>
+        </p>
+
+        (buttons sourced from <a href="https://cyber.dabamos.de/88x31/">https://cyber.dabamos.de/88x31/</a>)
+        </div>
+
+    
+    </body>
+</html>

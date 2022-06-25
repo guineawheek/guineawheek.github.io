@@ -1,0 +1,319 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <title>CS 194-26 Project 3 Submission!!!</title>
+        <style type="text/css">
+            body {
+                  font-family: 'Comic Sans MS', 'Comic Sans'; 
+            }
+            p { font-family: 'Comic Sans MS', 'Comic Sans'; } 
+            h1 { font-family: 'Comic Sans MS', 'Comic Sans'; }
+            h2 { font-family: 'Comic Sans MS', 'Comic Sans'; }
+            div { max-width: 70%; margin: auto; }
+            img { width: 400px; height: auto; }
+            table {border: 1;}
+        </style>
+
+        <script>
+            all_danes = ['01', '02', '03', '04', '05', '06', '07', '09', '10', '11', '13', '16', '17', '18', '19', '20', 
+            '21', '23', '24', '25', '26', '27', '28', '29', '31', '32', '33', '34', '36', '37', '38', '39', '40'];
+            var idx = 1;
+            function next_img() {
+                if (idx == all_danes.length - 1) {
+                    idx = 0;
+                } else {
+                    idx++;
+                }
+                dane = document.getElementById("img-dane");
+                warp = document.getElementById("img-warped-dane");
+                dane.src = "danes/" + all_danes[idx] + "-1m.jpg";
+                warp.src = "out/danes/" + all_danes[idx] + "-1m-warp.jpg";
+            }
+            function prev_img() {
+                if (idx == 0) {
+                    idx = all_danes.length - 1;
+                } else {
+                    idx--;
+                }
+                dane = document.getElementById("img-dane");
+                warp = document.getElementById("img-warped-dane");
+                dane.src = "danes/" + all_danes[idx] + "-1m.jpg";
+                warp.src = "out/danes/" + all_danes[idx] + "-1m-warp.jpg";
+            }
+        </script>
+    </head>
+    <body>
+        <div>
+        <marquee>
+            <h1>CS 194-26 Project 3: Face Morphing</h1>
+        </marquee>
+
+        <marquee direction="right">
+            <h3>lol </h3>
+        </marquee>
+
+        <h2>Defining correspondences</h2>
+        For the first segment, instead of using my face, we warp the Youtubers Scott Wozniak and Doug Walker into each other.
+        
+        To select their facial keypoints, we used a very manual and tedious process where I selected keypoints in GIMP in a mask layer and 
+        had code read it back in. However, I initially did not order the points from the GIMP readin, so a Jupyter notebook was written to
+         match the points to each other one by one. It was incredibly painful.
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="out/yt_keypts.png"><img style="width:100%" src="out/yt_keypts.png"/></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="out/yt_triangulation.jpg"><img style="width:100%" src="out/yt_triangulation.jpg"/></a>
+                    </td>
+                </tr>
+                <tr><td>The facial keypoints and triangulation mesh used.</td></tr>
+            </tbody>
+        </table>
+        <p>
+
+        For later parts, I engineered a solution where a floodfill algorithm would read a path to order the correspondences. This 
+        allowed correspondences to be generated much faster for later parts. The points would be ordered in the order of the algorithm 
+        encounteirng them in a breadth-first search
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="img/walker_frame.jpg"><img src="img/walker_frame.jpg"/></a>
+                    </td>
+                </tr>
+                <tr><td>Pathing keypoints with a drawn line.</td></tr>
+            </tbody>
+        </table>
+
+        <h2>The midway face</h2>
+        We then compute the transformation between Scott's and Doug's points to their average keypoint location, 
+        and then transform the pixels to them. We get the following:
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="img/wozniak.jpg"><img src="img/wozniak.jpg"/></a>
+                    </td>
+                    <td>
+                        <a href="img/walker.jpg"><img src="img/walker.jpg"/></a>
+                    </td>
+                    <td>
+                        <a href="out/yt_midway.jpg"><img src="out/yt_midway.jpg"/></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Scott Wozniak</td>
+                    <td>Doug Walker</td>
+                    <td>Their cursed midway face.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Morph sequence</h2>
+
+        We just linearly interpolate the weightings of both the color and morphed keypoint position here. Nothing too special.
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="out/yt_morph.gif"><img src="out/yt_morph.gif"/></a>
+                    </td>
+                </tr>
+                <tr><td>The morph image.</td></tr>
+            </tbody>
+        </table>
+
+        <h2>The average shape of a population</h2>
+        Here, we just used the Danes dataset with the neutral expressioned males.
+
+        <h3>The mean face</h3>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="out/danes_avg.jpg"><img src="out/danes_avg.jpg"/></a>
+                    </td>
+                </tr>
+                <tr><td>The average Danish male researcher, from this dataset at least.</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3>Various researchers morphed to the mean face</h3>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <img id="img-dane" src="danes/01-1m.jpg"/>
+                    </td>
+                    <td>
+                        <img id="img-warped-dane" src="out/danes/01-1m-warp.jpg"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=2>
+                        <button onclick="prev_img();">Prev img</button>
+                        <button onclick="next_img();">Next img</button>
+                    </td>
+                </tr>
+                <tr colspan=2><td colspan="2">Click the buttons above to cycle through all of our results.</td></tr>
+            </tbody>
+        </table>
+       
+        <p>
+            The general trend is that the images that warp better are the ones with faces that are closest
+            to the "average" forehead, as the keypoints given in this dataset mostly deal with the eyes, eyebrows,
+            nose, mouth, and jawline. (forehead shape isn't really included in the set)
+        </p>
+
+        <h3>Morphing Mike Matei into the mean face</h3>
+
+        As Wozniak and Walker both have glasses, but the mean Danish researcher face doesn't, I opted instead 
+        to work with Mike Matei, in his appearance from the renowned video short <a href="https://www.youtube.com/watch?v=7TZcW8wmmo4">
+        Minecraft with Gadget. </a>
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <img src="img/matei.jpg"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        Mike Matei, about to introduce his friend Inspector Gadget.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="out/mike_to_avg.jpg"/>
+                    </td>
+                    <td>
+                        <img src="out/avg_to_mike.jpg"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mike Matei warped to the average.</td>
+                    <td>The average warped to Mike Matei.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            Admittedly, I may have placed Matei's keypoints (as they correspond to the mean keypoints of the Danes datast) 
+            a bit far around his eyes. I chose to leave it as is, as it makes the cariacture effect more pronounced. And 
+            it's kind of funny.
+        </p>
+
+        <h2>Cariactures from the Danish mean</h2>
+
+        <p>We take the difference between Matei's keypoints and the mean Dane image's keypoints, and add this 
+        difference back at a factor of 0.7.
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="out/mike_caric.jpg"><img src="out/mike_caric.jpg"/></a>
+                    </td>
+                </tr>
+                <tr><td>Here's a cariacture of Mike under the Danish researcher set.</td></tr>
+            </tbody>
+        </table>
+
+        <p>
+            The result is much smaller eyes (due to the previously discussed quirk of my labelling), and a jawline more aligned 
+            with the Danish researchers.  Additionally, while Matei is slightly smiling, the Danish researchers are using a neutral 
+            facial expression in this subset, so Matei's expression has been shifted.
+        </p>
+
+        <h2>Bells and Whistles: Plead-o-tron 9000 &#x1F97A; &#x1F97A; &#x1F97A; &#x1F97A; &#x1F97A; &#x1F97A; &#x1F97A; &#x1F97A;</h2>
+
+        <p>After the quirk of Matei's eyes in the previous subsection, I wondered if manipulating face shape could be done intentionally 
+            with artificially created target keypoints. I decided, as an experiment, I would try and warp Matei and Walker's faces to 
+            a particular set of keypoints that tried to achieve a certain expression.
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="img/matei.jpg"><img src="img/matei.jpg"/></a>
+                    </td>
+                    <td>
+                        <a href="out/mike_plead.jpg"><img src="out/mike_plead.jpg"/></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="img/walker2.jpg"><img src="img/walker2.jpg"/></a>
+                    </td>
+                    <td>
+                        <a href="out/doug_plead.jpg"><img src="out/doug_plead.jpg"/></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=2 style="text-align: center;">
+                        <h3>I'm not sorry.</h3>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="img/plead_pts.png"><img src="img/plead_pts.png"/></a>
+                    </td>
+                    <td>
+                        <a href="img/mike_pts2.png"><img src="img/mike_pts2.png"/></a>
+                    </td>
+                    <td>
+                        <a href="img/doug_pts2.png"><img src="img/doug_pts2.png"/></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>The target keypoints.</td>
+                    <td>Mike's keypoints.</td>
+                    <td>Doug's keypoints.</td>
+                </tr>
+                
+            </tbody>
+        </table>
+
+
+        <!--
+            Compute the mean face of a particular population using images and keypoints given in their data. 
+            Display several images from the dataset with their face geometry warped into the average shape. 
+            Now warp your face into the average face's geometry and the average face into your face's geometry
+             and display the results on your website.
+            Generate and display a caricature by extrapolating from a population mean.
+            B&W
+        -->
+
+
+        <p>
+            <h2>
+            You made it to the end! yay!
+            </h2>
+        </p>
+
+        <p>
+            <img style="max-width:88px" src="share/boomer_python.png"/>
+            <img style="max-width:88px" src="share/linuxnow2.gif"/>
+            <img style="max-width:88px" src="share/vim.vialle.love.anim.gif"/>
+            <img style="max-width:88px" src="share/gimp.gif"/>
+            <img style="max-width:88px" src="share/madewithlove.gif"/>
+            <img style="max-width:88px" src="share/htmldream.gif"/>
+        </p>
+
+        (buttons sourced from <a href="https://cyber.dabamos.de/88x31/">https://cyber.dabamos.de/88x31/</a>)
+        </div>
+    </body>
+</html>

@@ -1,0 +1,493 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <title>CS 194-26 Project 2 Submission!!!</title>
+        <style type="text/css">
+            body {
+                  background-image: url("oraple_bg.jpg");
+                  background-repeat: repeat;
+                  font-family: 'Comic Sans MS', 'Comic Sans'; 
+            }
+            p { font-family: 'Comic Sans MS', 'Comic Sans'; } 
+            h1 { font-family: 'Comic Sans MS', 'Comic Sans'; }
+            h2 { font-family: 'Comic Sans MS', 'Comic Sans'; }
+            div { max-width: 70%; margin: auto; }
+            img { width: 400px; height: auto; }
+            table {border: 1;}
+        </style>
+    </head>
+    <body>
+        <div>
+        <marquee>
+            <h1>CS 194-26 Project 2: fun with filters and frequencies</h1>
+        </marquee>
+
+        <marquee direction="right">
+            <h3>oraple oraple oraple oraple oraple oraple oraple oraple oraple oraple oraple oraple oraple oraple oraple oraple oraple oraple oraple </h3>
+        </marquee>
+
+        <h2>Fun with Filters</h2>
+        <h3>Finite difference operator - no blurring</h3>
+
+        <!--
+        First, show the partial derivative in x and y of the cameraman image by convolving the image with finite difference operators D_x and D_y 
+        (you can use convolve2d from scipy.signal library). 
+        
+        Now compute and show the gradient magnitude image. 
+        
+        To turn this into an edge image, lets binarize the gradient magnitude image by picking the appropriate threshold 
+        (trying to suppress the noise while showing all the real edges; it will take you a few tries to find the right threshold; 
+        This threshold is meant to be assessed qualitatively).
+        -->
+
+        <p>
+            <h4> General summary of graident magnitude computation</h4>
+
+            <p>
+            We generally compute gradient magnitude at the ij-th entry as some function of the square root of the 
+            ij-th entry of the grayscale image convolved with Dx squared plus the ij-th entry of the grayscale 
+            image convolved with Dy squared, as can be seen in the equation below. (We use Gr for the grayscale image.)
+
+            The grayscale image convolved with Dx or Dy can be blurred, either after Dx is applied or with a single composite 
+            convolution where Dx and Dy are pre-convolved with the Gaussian filter.
+
+            <a href="gradient.png"><img src="gradient.png"/></a>
+
+            </p>
+
+        </p>
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="img/cameraman.png"><img src="img/cameraman.png"/></a>
+                    </td>
+                </tr>
+                <tr><td>The original cameraman image used throughout this question.</td></tr>
+            </tbody>
+        </table>
+
+        <table border="1">
+            <tbody>
+                <thead>
+                    <tr>
+                        <th> <h3>Cameraman convolved with D_x</h3> </th>
+                        <th> <h3>Cameraman convolved with D_y</h3> </th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><a href="out/cam_dx.png"><img src="out/cam_dx.png"/></a></td>
+                    <td><a href="out/cam_dy.png"><img src="out/cam_dy.png"/></a></td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1">
+            <tbody>
+                <thead>
+                    <tr>
+                        <th> <h3>Gradient magnitude image</h3> </th>
+                        <th> <h3>Binary threshold (cutoff=0.3)</h3> </th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><a href="out/cam_grad_m.png"><img src="out/cam_grad_m.png"/></a></td>
+                    <td><a href="out/cam_grad_bin.png"><img src="out/cam_grad_bin.png"/></a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!--
+                    <td><a href="output/z.jpg"><img src="output/z.jpg"/></a></td>
+        -->
+
+        <p>
+            <h3>Finite difference operator - Gaussian blur</h3>
+            <p>Used was a 7x7 Gaussian kernel with sigma=1.4</p>
+            <table border="1">
+                <tbody>
+                    <thead>
+                        <tr>
+                            <th> <h3>D_x convolved with gaussian</h3> </th>
+                            <th> <h3>D_y convolved with gaussian</h3> </th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td><a href="out/dogx.png"><img style="image-rendering: pixelated;" src="out/dogx.png"/></a></td>
+                        <td><a href="out/dogy.png"><img style="image-rendering: pixelated;" src="out/dogy.png"/></a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table border="1">
+                <tbody>
+                    <thead>
+                        <tr>
+                            <th> <h3>Blurred cameraman convolved with D_x</h3> </th>
+                            <th> <h3>Blurred cameraman convolved with D_y</h3> </th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td><a href="out/blur_dx.png"><img src="out/blur_dx.png"/></a></td>
+                        <td><a href="out/blur_dy.png"><img src="out/blur_dy.png"/></a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table border="1">
+                <tbody>
+                    <thead>
+                        <tr>
+                            <th> <h3>Gradient magnitude image</h3> </th>
+                            <th> <h3>Binary threshold (cutoff=0.05)</h3> </th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td><a href="out/blur_grad_m.png"><img src="out/blur_grad_m.png"/></a></td>
+                        <td><a href="out/blur_grad_bin.png"><img src="out/blur_grad_bin.png"/></a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                The edge images are thicker without the high-frequency features that you see in the unblurred version.
+                This is particularly noticable when comparing the binary threshold images together. The unblurred variant
+                has jagged contours that seem to fit the very pixels, whereas this actually has meaningful stroke width 
+                on edges. In general, this is a better representation.
+            </p>
+        </p>
+
+        <p>
+            <h3>Gaussian blur pre-convolved with finite difference operators </h3>
+            <table border="1">
+                <tbody>
+                    <thead>
+                        <tr>
+                            <th> <h3>Gradient magnitude image</h3> </th>
+                            <th> <h3>Binary threshold (cutoff=0.05)</h3> </th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td><a href="out/blur2_grad_m.png"><img src="out/blur2_grad_m.png"/></a></td>
+                        <td><a href="out/blur2_grad_bin.png"><img src="out/blur2_grad_bin.png"/></a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+                In general, the differences are relatively minor. The binary thresholded images are similar, especially
+                on the main edges of the image.
+                The single convolution does produce more specks in the thresholded image though....
+            </p>
+        </p>
+        <h2>Fun with frequencies!</h2>
+        <h3>Image sharpening</h3>
+        <p>Used was a gaussian of 7x7 and sigma 1.4 across the board for blurring and the unsharp-mask.</p>
+        <table border="1">
+            <tbody>
+                <thead>
+                    <tr>
+                        <th> <h3>Taj Mahal (original)</h3> </th>
+                        <th> <h3>With unsharp applied (alpha=2)</h3> </th>
+                        <th> <h3>"Deep fried" (alpha=200)</h3> </th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><a href="img/taj.jpg"><img src="img/taj.jpg"/></a></td>
+                    <td><a href="out/taj_sharp.jpg"><img src="out/taj_sharp.jpg"/></a></td>
+                    <td><a href="out/taj_fried.jpg"><img src="out/taj_fried.jpg"/></a></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            The face details of the Taj Mahal appear more clear against the background, as these are the higher frequency features.
+        </p>
+        <table border="1">
+            <tbody>
+                <thead>
+                    <tr>
+                        <th> <h3>Robot with sentimental value</h3> </th>
+                        <th> <h3>With unsharp applied (alpha=5)</h3> </th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><a href="img/robot.jpg"><img src="img/robot.jpg"/></a></td>
+                    <td><a href="out/robot.jpg"><img src="out/robot.jpg"/></a></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            The texture of the foam side pad and structural channel edges holes seem more clear under a sharp filter.
+        </p>
+        <table border="1">
+            <tbody>
+                <thead>
+                    <tr>
+                        <th> <h3>Already relatively sharp robot image </h3> </th>
+                        <th> <h3>With unsharp applied (alpha=5)</h3> </th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td><a href="img/robot_sharp.jpg"><img src="img/robot_sharp.jpg"/></a></td>
+                    <td><a href="out/robot_sharp.jpg"><img src="out/robot_sharp.jpg"/></a></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            In the above set of images, we blur the image first before sharpening. The "resharpened" image's holes 
+            on the robot's structural channel
+            seem blurrier than the original image. This makes sense as we likely lost that information on the blur pass, 
+            and the high frequency pass is going to have a hard time getting those lost frequencies back out of thin air.
+        </p>
+
+        <h2>Hybrid images</h2>
+        <p>
+            For this, I pre-align the input images by adapting the starter code to save image alignments. 
+            We first consider the starter images as a walkthru of the basic idea. We use 
+            Hoiem as the low-frequency component and Nutmeg as the high-frequency component. To threshold, we blur both using 
+            a Gaussian that is 55x55 and sigma 15.
+        </p>
+        <p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th> <h3>Derek Hoiem</h3> </th>
+                    <th> <h3>His frequency spectra</h3> </th>
+                </tr>
+                <tr>
+                    <td><a href="img/hoiem.jpg"><img src="img/hoiem.jpg"/></a></td>
+                    <td><a href="out/hoiem_fft.jpg"><img src="out/hoiem_fft.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <th> <h3>Nutmeg</h3> </th>
+                    <th> <h3>Nutmeg's freq. spectra</h3> </th>
+                </tr>
+                <tr>
+                    <td><a href="img/nutmeg.jpg"><img src="img/nutmeg.jpg"/></a></td>
+                    <td><a href="out/nutmeg_fft.jpg"><img src="out/nutmeg_fft.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <th> <h3>Low-passed Hoiem</h3> </th>
+                    <th> <h3>Freq. spectra</h3> </th>
+                </tr>
+                    <td><a href="out/hoiem_lp.jpg"><img src="out/hoiem_lp.jpg"/></a></td>
+                    <td><a href="out/hoiem_lp_fft.jpg"><img src="out/hoiem_lp_fft.jpg"/></a></td>
+                <tr>
+                </tr>
+                <tr>
+                    <th> <h3>High-passed Nutmeg</h3> </th>
+                    <th> <h3>Freq. spectra</h3> </th>
+                </tr>
+                <tr>
+                    <td><a href="out/nutmeg_hp.jpg"><img src="out/nutmeg_hp.jpg"/></a></td>
+                    <td><a href="out/nutmeg_hp_fft.jpg"><img src="out/nutmeg_hp_fft.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <th> <h3>Hybrid image</h3> </th>
+                    <th> <h3>Freq. spectra</h3> </th>
+                </tr>
+                <tr>
+                    <td><a href="out/sample_hybrid.jpg"><img src="out/sample_hybrid.jpg"/></a></td>
+                    <td><a href="out/sample_hybrid_fft.jpg"><img src="out/sample_hybrid_fft.jpg"/></a></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            We note how the frequency spectra of the low-pass image seems to limit high-frequencies to the axes (Gaussian filtering 
+            is not an ideal LPF), while the high-pass filter seems to remove the low frequencies near the center of the spectrum 
+            (which is expected.) We can see the overlay of the high-frequency elements in the final hybrid image.
+        </p>
+
+        <h3>More hybrid images</h3>
+        <h4>(with apologies to the eecs dept)</h4>
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th> <h3>Anant Sahai (from our EECS faculty page)</h3> </th>
+                    <th> <h3>Gireeja Ranade (also from faculty page)</h3> </th>
+                </tr>
+                <tr>
+                    <td><a href="img/sahai.jpg"><img src="img/sahai.jpg"/></a></td>
+                    <td><a href="img/ranade.jpg"><img src="img/ranade.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <th colspan=2> <h3>i couldn't get this idea out of my head ok i'm SORRY</h3> </th>
+                </tr>
+                <tr>
+                    <td colspan=2 style="text-align: center;"><a href="out/cursed.jpg"><img src="out/cursed.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <th> <h3>Only colorizing the low-freq element (Ranade)</h3> </th>
+                    <th> <h3>Only colorizing the high-freq element (Sahai)</h3> </th>
+                </tr>
+                <tr>
+                    <td><a href="out/cursed_hp_gray.jpg"><img src="out/cursed_hp_gray.jpg"/></a></td>
+                    <td><a href="img/cursed_lp_gray.jpg"><img src="out/cursed_lp_gray.jpg"/></a></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            Note that I flipped Ranade over the y-axis so their shoulders would line up better. I was not going 
+            to submit this hybridization but I think it's actually a good result, just extraordinarily cursed, and 
+            I'm out of time. My apologies if you have to grade this. We used Sahai as the higher frequency element, 
+            because he has glasses.
+
+            In general, having the lower frequency component have color seems to work better, and there's not much difference 
+            between having both parts have color and only the lower frequency component. This makes sense as the lower 
+            frequency component seems to act as sort of a base for the rest of the image. 
+
+        </p>
+        
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th> <h3>FTC team 9971 <a href="https://youtu.be/VHR9JCeZOyk?t=70">from here</a></h3> </th>
+                    <th> <h3>FTC team 8644 <a href="https://youtu.be/3CaELdp8A5Q?t=64">from here</a></h3> </th>
+                </tr>
+                <tr>
+                    <td><a href="img/rr1_9971.png"><img src="img/rr1_9971.png"/></a></td>
+                    <td><a href="img/rr1_8644.png"><img src="img/rr1_8644.png"/></a></td>
+                </tr>
+                <tr>
+                    <th colspan=2> <h3>Hybrid image</h3> </th>
+                </tr>
+                <tr>
+                    <td colspan=2 style="text-align: center;"><a href="out/hybrid_bots.jpg"><img src="out/hybrid_bots.jpg"/></a></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            This kind of works, but at the saime time, not really. You can see segments of 8644's robot overlaid on top, but 
+            it doesn't really have the same level of coherency that human subjects do. The high frequency nature of robots in comparison 
+            leads to much less of a good effect, so to speak.
+        </p>
+
+        </p>
+        <h2>Multiresolution blending using Gaussian/Laplacian stacks</h2>
+        <h3>oraple oraple oraple oraple oraple oraple oraple oraple oraple</h3>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th> <h3>Apple </h3> </th>
+                    <th> <h3>Orange </h3> </th>
+                    <th> <h3>Composite </h3> </th>
+                </tr>
+                <tr>
+                    <td><a href="out/oraple/lap_apple_0.jpg"><img src="out/oraple/lap_apple_0.jpg"/></a></td>
+                    <td><a href="out/oraple/lap_orang_0.jpg"><img src="out/oraple/lap_orang_0.jpg"/></a></td>
+                    <td><a href="out/oraple/lap_sum_0.jpg"><img src="out/oraple/lap_sum_0.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <td><a href="out/oraple/lap_apple_2.jpg"><img src="out/oraple/lap_apple_2.jpg"/></a></td>
+                    <td><a href="out/oraple/lap_orang_2.jpg"><img src="out/oraple/lap_orang_2.jpg"/></a></td>
+                    <td><a href="out/oraple/lap_sum_2.jpg"><img src="out/oraple/lap_sum_2.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <td><a href="out/oraple/lap_apple_4.jpg"><img src="out/oraple/lap_apple_4.jpg"/></a></td>
+                    <td><a href="out/oraple/lap_orang_4.jpg"><img src="out/oraple/lap_orang_4.jpg"/></a></td>
+                    <td><a href="out/oraple/lap_sum_4.jpg"><img src="out/oraple/lap_sum_4.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <td><a href="out/oraple/sum_apple.jpg"><img src="out/oraple/sum_apple.jpg"/></a></td>
+                    <td><a href="out/oraple/sum_orang.jpg"><img src="out/oraple/sum_orang.jpg"/></a></td>
+                    <td><a href="out/oraple/sum_oraple.jpg"><img src="out/oraple/sum_oraple.jpg"/></a></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Presented above is a table similar to Figure 3.42. The layers shown are from layers 0, 2, 4, and the final sums of the laplacians.
+            This is presented in just grayscale for simplicity, but if we apply this same process to each rgb channel, we can get...a color oraple!
+
+            The color oraple blends pretty well across all channels, so this really simple extension across three channels works really well.
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th> <h3>Color oraple can't hurt you...right? </h3> </th>
+                </tr>
+                <tr>
+                    <td><a href="out/oraple/oraple_color.jpg"><img src="out/oraple/oraple_color.jpg"/></a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>More multiresolution examples</h2>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th colspan=3 style="text-align: center;"> <h2>There is no god. In this realm...</h2> </th>
+                </tr>
+                <tr>
+                    <td><a href="img/aoc_shapiro/aoc.jpg"><img src="img/aoc_shapiro/aoc.jpg"/></a></td>
+                    <td><a href="img/aoc_shapiro/shapiro.jpg"><img src="img/aoc_shapiro/shapiro.jpg"/></a></td>
+                    <td><a href="img/aoc_shapiro/mask.jpg"><img src="img/aoc_shapiro/mask.jpg"/></a></td>
+                </tr>
+                <tr>
+                    <td>Alexandria Ocaiso-Cortez.</td>
+                    <td>Ben Shapiro.</td>
+                    <td>The mask used.</td>
+                </tr>
+                <tr>
+                    <th colspan=3 style="text-align: center;"> <h1>...there is only facts and logic.</h1> </th>
+                </tr>
+                <tr>
+                    <td colspan=3 style="text-align: center;"><a href="out/aoc_shapiro.jpg"><img src="out/aoc_shapiro.jpg"/></a></td>
+                </tr>
+
+            </tbody>
+        </table>
+        <h3>One more fusion -- one that's less cursed.</h3>
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th colspan=3 style="text-align: center;"> <h2>Nobody on the Internet knows...</h2> </th>
+                </tr>
+                <tr>
+                    <td><a href="img/dog/friend.jpg"><img src="img/dog/friend.jpg"/></a></td>
+                    <td><a href="img/dog/border-collie.jpg"><img src="img/dog/border-collie.jpg"/></a></td>
+                    <td><a href="img/dog/mask.png"><img src="img/dog/mask.png"></td>
+                </tr>
+                <tr>
+                    <td>A friend.</td>
+                    <td>His favorite breed of dog. 
+</td>
+                    <td>A simple vertical mask.</td>
+                </tr>
+                <tr>
+                    <th colspan=3 style="text-align: center;"> <h1>...if you're actually a dog.</h1> </th>
+                </tr>
+                <tr>
+                    <td colspan=3 style="text-align: center;"><a href="out/dog_suit.jpg"><img src="out/dog_suit.jpg"/></a></td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        (stock dog source is (c) Eric Isselée / stock.adobe.com)
+
+        <h2>What was learned?</h2>
+        <p>
+
+            Basically, I learned how to use frequency analysis on images to create the most cursed abominations known to man.
+            I took a lot of classes on signals and systems in an EE context but not a whole lot as applied to images, so this is all 
+            new to me. The multiresolution blending stuff with Laplacian pyramids is a fascinating construction.
+        </p>
+
+        <p>
+            <h2>
+            You made it to the end! yay!
+            </h2>
+        </p>
+
+        <p>
+            <img style="max-width:88px" src="share/boomer_python.png"/>
+            <img style="max-width:88px" src="share/linuxnow2.gif"/>
+            <img style="max-width:88px" src="share/vim.vialle.love.anim.gif"/>
+            <img style="max-width:88px" src="share/gimp.gif"/>
+            <img style="max-width:88px" src="share/madewithlove.gif"/>
+            <img style="max-width:88px" src="share/htmldream.gif"/>
+        </p>
+
+        (buttons sourced from <a href="https://cyber.dabamos.de/88x31/">https://cyber.dabamos.de/88x31/</a>)
+        </div>
+    </body>
+</html>

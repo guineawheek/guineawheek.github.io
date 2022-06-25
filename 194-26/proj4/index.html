@@ -1,0 +1,457 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <title>CS 194-26 Project 4 Submission!!!</title>
+        <style type="text/css">
+            body {
+                  background-image: url("bg.jpg");
+                  background-repeat: repeat;
+                  font-family: 'Comic Sans MS', 'Comic Sans'; 
+            }
+            p { font-family: 'Comic Sans MS', 'Comic Sans'; } 
+            h1 { font-family: 'Comic Sans MS', 'Comic Sans'; }
+            h2 { font-family: 'Comic Sans MS', 'Comic Sans'; }
+            div { max-width: 70%; margin: auto; }
+            img { width: 400px; height: auto; }
+            table {border: 1;}
+        </style>
+        <meta property="og:title" content="CS 194-26 Project 4 submission" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://guineawheek.github.io/194-26/proj4/" />
+        <meta property="og:image" content="https://guineawheek.github.io/194-26/proj4/img/ralsei.jpg" />
+        <meta property="og:description" content="ralsei is smoking a joint" />
+        <meta name="theme-color" content="#5ddc91">
+
+        <!-- Include this to make the og:image larger -->
+        <meta name="twitter:card" content="summary_large_image">
+    </head>
+    <body>
+        <div>
+        <marquee>
+            <h1>CS 194-26 Project 4a: Image Warping and Mosaicing</h1>
+        </marquee>
+
+        <marquee direction="right">
+            <h3>pain pain pain pain pain pain pain pain pain pain pain pain pain pain pain pain pain pain pain pain pain </h3>
+        </marquee>
+
+        <h2>Shooting pictures</h2>
+
+
+        <p>
+            I mostly just took pictures around Berkeley's campus and my own apartment at like 3am lmao
+
+            An issue i ran into early on was actually just having too little overlap between images, as this ended up
+            in projections (down the line) that were too large to be renderable.
+        </p>
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="img/vlsbdw_88.jpg"><img style="width:100%" src="img/vlsbdw_88.jpg"/></a> </td>
+                    <td> <a href="img/vlsbdw_89.jpg"><img style="width:100%" src="img/vlsbdw_89.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td> <a href="img/likashing_im1.jpg"><img style="width:100%" src="img/likashing_im1.jpg"/></a> </td>
+                    <td> <a href="img/likashing_im2.jpg"><img style="width:100%" src="img/likashing_im2.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td> <a href="img/mpv-shot0003.jpg"><img style="width:100%" src="img/mpv-shot0003.jpg"/></a> </td>
+                    <td> <a href="img/mpv-shot0004.jpg"><img style="width:100%" src="img/mpv-shot0004.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td> <a href="img/mpv-shot0005.jpg"><img style="width:100%" src="img/mpv-shot0005.jpg"/></a> </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Defining homographies</h2>
+        <p>
+        We take the homography transform equation:
+
+        </p>
+        <img src="web_img/homo_setup.png"/>
+
+        <p>
+
+        And algebraically manipulate it into a linear equation for a...h that we can then throw into a linear least squares solver:
+        </p>
+        <img src="web_img/homo_lstsqs.png" scale=200%/>
+
+        <p>
+            Had I more time, I would've liked to try and experiment with modifications on least squares, such as a way to weight
+            certain keypoints over other keypoints as not all keypoints yield better images due to selection noise. Or perhaps 
+            other techniques such as ridge regression or lasso. I don't remember enough of 189 though.
+        </p>
+
+        <h2>Warping the images</h2>
+
+        <h3>Keypoint selection</h3>
+
+        <p>
+        I generally found that it was best to start with the minimal four points, and then slowly add points to get the images 
+        to align better, and remove points if they caused issues. Displayed is a labelled pair of 13 correspondences I used later:
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/apt_keypts_1.jpg"><img style="width:100%" src="out/apt_keypts_1.jpg"/></a> </td>
+                    <td> <a href="out/apt_keypts_2.jpg"><img style="width:100%" src="out/apt_keypts_2.jpg"/></a> </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Rectified images</h3>
+
+        <p>
+            I decided to first rectify a DMC 60c box from the first four keypoints from the left image above. 
+            The DMC60c was a series of brushed motor controllers made by Digilent best known for
+            being discontinued as they were sued by another manufacter who alleged that they
+            <a href="https://storage.courtlistener.com/recap/gov.uscourts.txwd.1021353/gov.uscourts.txwd.1021353.1.0.pdf">had stolen the firmware.</a>
+        </p>
+
+        <table border="1">
+            <tbody>
+                <tr> <td> <a href="out/dmc60c.png"><img style="width:100%" src="out/dmc60c.png"/></a> </td> </tr>
+                <tr> <td>oops</td> </tr>
+            </tbody>
+        </table>
+
+        <p>
+            I then did a label on a trashcan outside of Li Ka Shing. Waste free in ${YEAR}+1, I suppose.
+        </p>
+        <table border="1">
+            <tbody>
+                <tr> <td> <a href="img/likashing_im2.jpg"><img src="img/likashing_im2.jpg"/></a> </td>
+                <td> <a href="out/meme.jpg"><img src="out/meme.jpg"/></a> </td> </tr>
+            </tbody>
+        </table>
+
+        <h2>Blending images into mosaics</h2>
+
+        <h3>My room</h3>
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="img/mpv-shot0003.jpg"><img style="width:100%" src="img/mpv-shot0003.jpg"/></a> </td>
+                    <td> <a href="img/mpv-shot0004.jpg"><img style="width:100%" src="img/mpv-shot0004.jpg"/></a> </td>
+                    <td> <a href="img/mpv-shot0005.jpg"><img style="width:100%" src="img/mpv-shot0005.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Image 1.</td>
+                    <td>Image 2.</td>
+                    <td>Image 3.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            I had two different approaches for stitching together an img2 onto an img1. There was a naive approach that just 
+            found the overlap intersection between the two images, and within that intersection, just averaged the two images together 
+            (the "naive" merger.) This worked okay but has an issue of having really noticable seams at image overlap boundaries.
+        </p>
+
+        <p>
+            There also existed a more sophisticated approach (the "antiseam" merger) that would try to resolve these seams, which generally lets img2 overwrite
+            most of the overlap intersection, but near the edge between the space of only img1 and the intersection, would create a gradient
+            using a bwdist-like method to give a more smooth transition. This does have the downside of being somewhat less able to 
+            make differences in lighting less noticable (as image 3 in my room has different lighting.) In general, this approach yields more 
+            aesthetically pleasing results, though.
+        </p>
+
+        <p>
+            Presented is a comparison of the techniques, for two images, and three images stitched together. The stitcher can do arbitrary numbers 
+            of images.
+        </p>
+
+        <table border="1">
+            <tbody>
+                <tr><td colspan="3">Two-image intersection masks illustration.</td></tr>
+                <tr>
+                    <td> <a href="out/mask2.png"><img style="width:100%" src="out/mask2.png"/></a> </td>
+                    <td> <a href="out/mask1.png"><img style="width:100%" src="out/mask1.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Mask for image 2.</td>
+                    <td>Mask for image 1</td>
+                </tr>
+                <tr>
+                    <td> <a href="out/maski.png"><img style="width:100%" src="out/maski.png"/></a> </td>
+                    <td> <a href="out/f11.png"><img style="width:100%" src="out/f11.png"/></a> </td>
+                    <td> <a href="out/f12.png"><img style="width:100%" src="out/f12.png"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Overlap intersection mask.</td>
+                    <td>Gradiented intersection mask (ff1) for the antiseam merger.</td>
+                    <td>An inverse, (1-ff1), used for calculating a (1-a)*im1 term in the weighted average.</td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/apt2_naive.jpg"><img style="width:100%" src="out/apt2_naive.jpg"/></a> </td>
+                    <td> <a href="out/apt2.jpg"><img style="width:100%" src="out/apt2.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>2 images, naive blending.</td>
+                    <td>2 images, antiseam blending.</td>
+                </tr>
+                <tr>
+                    <td> <a href="out/apt3_naive.jpg"><img style="width:100%" src="out/apt3_naive.jpg"/></a> </td>
+                    <td> <a href="out/apt3_antiseam.jpg"><img style="width:100%" src="out/apt3_antiseam.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>3 images, naive blending.</td>
+                    <td>3 images, antiseam blending.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Outside Li Ka Shing</h3>
+        <p>(Probably should've had more overlap lol)</p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="img/likashing_im1.jpg"><img style="width:100%" src="img/likashing_im1.jpg"/></a> </td>
+                    <td> <a href="img/likashing_im2.jpg"><img style="width:100%" src="img/likashing_im2.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Image 1.</td>
+                    <td>Image 2.</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <a href="out/likashing.jpg"><img style="width:100%" src="out/likashing.jpg"/></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Merged image</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Outside VLSB and Dwinelle</h3>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="img/vlsbdw_88.jpg"><img style="width:100%" src="img/vlsbdw_88.jpg"/></a> </td>
+                    <td> <a href="img/vlsbdw_89.jpg"><img style="width:100%" src="img/vlsbdw_89.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Image 1.</td>
+                    <td>Image 2.</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <a href="out/vlsb_dwinelle.jpg"><img style="width:100%" src="out/vlsb_dwinelle.jpg"/></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">Merged image</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>Turns out if you have trees in your image, you're likely going to get ghosting when those things move slightly.</p>
+
+        <h2>
+            Learning outcomes:
+        </h2>
+
+        <p>
+            I hate selecting keypoints. I wish there was a way to automate this (there is, but not in proj4a). 
+            Also, homography transforms really do have all the limitations inherent to least squares, such as sensitivity to outliers, etc. 
+            When you don't really know what you're doing, your code gets really messy really quickly. My code is a mess. I barely understand it myself
+            as is. I now understand more greatly how "academia code" gets written as a result.
+        </p>
+
+
+        <h2> Bells and Whistles....????</h2>
+        <p>
+            My room is pretty barren, as you can probably see above. How can we fix this?
+        </p>
+       
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/ralsei_joint.jpg"><img style="width:100%" src="out/ralsei_joint.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Instant improvement.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h1>Proj4B: Autostitching</h1>
+
+        <h2>Harris interest point detector</h2>
+
+        <p>
+            We first detect all the Harris corners in an image at single-scale, using the provided implementation.
+        </p>
+
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/apt1_harris.jpg"><img style="width:100%" src="out/apt1_harris.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>There's a lot of points..</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Adaptive non-maximal suppression</h2>
+
+        <p>
+        For each harris point p1, we take the distance to the nearest point p2 (if any) where the harris strength h(p1) &lt; 0.9*h(p2)
+        and this is the "radius" associated with the point. We take the top 500 points with the largest radii as the points we use. This 
+        allows for candidate points scattered across the image.
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/apt1_harris_sup.jpg"><img style="width:100%" src="out/apt1_harris_sup.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Adaptive non-maximal suppression points.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Feature descriptor extraction</h2>
+
+        <p>
+            We then extract the features from sampling from a 40x40 px range around each point (with 5px spacing) to get a 64-dimensional
+            "feature descriptor". A visualization of what that looks like on one of the feature points is shown below.
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/feat_viz.jpg"><img style="image-rendering: pixelated; width: 240px" src="out/feat_viz.jpg"/></a> </td>
+                    <td> <a href="out/feat_upclose.jpg"><img style="image-rendering: pixelated; width: 240px" src="out/feat_upclose.jpg"/></a> </td>
+                    <td> <a href="out/feat_samp.jpg"><img style="image-rendering: pixelated; width: 240px" src="out/feat_samp.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>The feature sampling area (yellow) around a point (red).</td>
+                    <td>The 40x40 grayscale patch that we sample from</td>
+                    <td>The low-freq downsampling into a 8x8 normalized feature descriptor.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Feature matching using the Lowe ratio</h2>
+
+        <p>
+            We then try to match various feature descriptors using SSD. 
+            We record their nearest neighbor error and second-nearest neighbor error.
+            We then filter for point correspondences with a squared Lowe ratio (err_1nn / err_2nn)^2 &lt; 0.6. 
+            These form the candidate points from which RANSAC draws from. 
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/apt1_cpts1.jpg"><img style="width:100%" src="out/apt1_cpts1.jpg"/></a> </td>
+                    <td> <a href="out/apt1_cpts2.jpg"><img style="width:100%" src="out/apt1_cpts2.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Lowe-ratio filtered correspondences for im1.</td>
+                    <td>Lowe-ratio filtered correspondences for im2.</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>RANSAC Homographies</h2>
+
+        <p>
+            The process of RANSAC goes something like:
+
+            <ol>
+                <li>select four feature pairs from the lowe-filtered candidates</li>
+                <li>compute the exact homography on those pairs</li>
+                <li>find the inliers where dist(rpts1, H @ rpts1) &lt; epsilon = 3</li>
+                <li>repeat steps 1-3 about 10,000 times</li>
+                <li>keep the largest set of inliers found in the iterations above and use it for least-squares homography in stiching.</li>
+            </ol>
+
+            With the RANSAC correspondences, we can then plug them into our proj4a code and get panoramas out.
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/apt1_rpts1.jpg"><img style="width:100%" src="out/apt1_rpts1.jpg"/></a> </td>
+                    <td> <a href="out/apt1_rpts2.jpg"><img style="width:100%" src="out/apt1_rpts2.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>RANSAC-selected points for im1.</td>
+                    <td>RANSAC-selected points for im2.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Autostitching mosaics</h2>
+
+        <p>
+            The hand-selected points do a little better, especially on the apartment where there aren't many corners on the door/lightswitch,
+            but are largely comparable/admissible on the vlsb and likashing image pairs.
+            To be fair to the autostitcher, a lot of the hand-selected keypoints were selected specifically
+            to make the image stitch better visually. The autostitcher does an admirable job though.
+        </p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td> <a href="out/apt2.jpg"><img style="width:100%" src="out/apt2.jpg"/></a> </td>
+                    <td> <a href="out/pipis_room.jpg"><img style="width:100%" src="out/pipis_room.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Proj4a hand-selected apartment.</td>
+                    <td>Autostitched apartment.</td>
+                </tr>
+                <tr>
+                    <td> <a href="out/likashing.jpg"><img style="width:100%" src="out/likashing.jpg"/></a> </td>
+                    <td> <a href="out/pipis_likashing.jpg"><img style="width:100%" src="out/pipis_likashing.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Proj4a hand-selected likashing.</td>
+                    <td>Autostitched likashing.</td>
+                </tr>
+                <tr>
+                    <td> <a href="out/vlsb_dwinelle.jpg"><img style="width:100%" src="out/vlsb_dwinelle.jpg"/></a> </td>
+                    <td> <a href="out/pipis_vlsbdw.jpg"><img style="width:100%" src="out/pipis_vlsbdw.jpg"/></a> </td>
+                </tr>
+                <tr>
+                    <td>Proj4a hand-selected vlsb/dwinelle.</td>
+                    <td>Autostitched vlsb/dwinelle.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2> Learning outcomes </h2>
+        <p>
+            RANSAC is pretty cool! I did not expect all of this to work so well on so many assumptions.
+        </p>
+
+        <p>
+            <h2>
+            You made it to the end! yay!
+            </h2>
+        </p>
+
+        <p>
+            <img style="max-width:88px" src="share/boomer_python.png"/>
+            <img style="max-width:88px" src="share/linuxnow2.gif"/>
+            <img style="max-width:88px" src="share/vim.vialle.love.anim.gif"/>
+            <img style="max-width:88px" src="share/gimp.gif"/>
+            <img style="max-width:88px" src="share/madewithlove.gif"/>
+            <img style="max-width:88px" src="share/htmldream.gif"/>
+        </p>
+
+        (buttons sourced from <a href="https://cyber.dabamos.de/88x31/">https://cyber.dabamos.de/88x31/</a>)
+        </div>
+
+    
+    </body>
+</html>
