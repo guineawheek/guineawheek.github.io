@@ -10,5 +10,6 @@ https://reduxrobotics.com (product firmware, user SDKs, documentation, internal 
 
 ## things i did when i was in college
 
+[Chess-playing robot](chessrobot/index)
 
 ## things i did when i was in highschool
