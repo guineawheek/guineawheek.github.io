@@ -1,5 +1,5 @@
 # Chess Robot Index
-![img](img/chessrobot_full.jpeg)
+<img src="img/chessrobot_full.jpeg" width="65%">
 
 [Intro](./intro)
 

@@ -10,7 +10,9 @@ This was compounded even further by the difficulties of COVID preventing us from
 
 # Why is your project interesting? 
 
-<video loop src="img/pick_and_place.mp4"></video>
+<video controls loop autoplay>
+    <source src="img/pick_and_place.mp4" type="video/mp4">
+</video>
 
 It’s an automatic chess playing robot!
 And, even better, it’s 3d printed, using a super common Raspberry Pi and associated Pi camera.
