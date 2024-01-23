@@ -8,59 +8,67 @@ The sensing portion of the project comes from viewing the chessboard and pieces 
 
 # The Saga of our Design
 
-![prelim sketch](img/prelim_sketch.png)
+<img src="img/prelim_sketch.png" width="65%">
 
 Perhaps obviously, this original design of ours ended up being quite a bit too ambitious, and over-complicated for a pick-and-place robot. Our following designs reflected that.
 
-![cad](img/cad.png)
+<img src="img/cad.png" width="65%">
 
 After a good period of designing in Onshape, we settled on this model to be the one we would work off of. As we waited for our 3D-printer to arrive and get setup, we began work on preparing the code.
 
 In order to create the IK for our robot actuation, we created a corresponding URDF model.
 
-![urdf](img/urdf.png)
+<img src="img/urdf.png" width="65%">
 
 However, it turned out this design was not feasible. Microservos were not meant to be used for such heavy loads, and their pressure-joints were not capable of holding up the arms. 
 
-![it don't work](img/itdontwork.jpg)
+<img src="img/itdontwork.jpg" width="65%">
 
-<video loop src="img/linearact.mp4">The linear actuator worked great though :) </video>
+<video controls loop autoplay muted>
+    <source src="img/linearact.mp4" type="video/mp4">
+</video>
+The linear actuator worked great though :) 
 
 Thus, we had to go back to the drawing board. After some debate, we ended up buying parts from vendors aimed at high-school robotics competitions.
 
 The assembly of a combination of VEX and FTC parts required awkward angles, sandpaper, and superglue. Combined with the fact that the metal c-channels we got were off-sized scrap metal cut using 2 hours with a Dremel, we decided it was better not to CAD this renewed arm design.
 
 
-<video loop src="img/freehand_test.mp4"></video>
-<video loop src="img/board_test.mp4"></video>
+<video controls loop autoplay muted>
+    <source src="img/freehand_test.mp4" type="video/mp4">
+</video>
+<video controls loop autoplay muted>
+    <source src="img/board_test.mp4" type="video/mp4">
+</video>
 
 However, although the servos worked, we learned that a Raspberry Pi cannot control servos very well. GPIO-based PWM is extremely janky, and causes the arms to continually wobble and jerk randomly. Needless to say, such irregularity makes our pick-and-place mechanism impossibly inconsistent.
 
 To solve this, we decided to invest in a strap-on PWM board. The original board we ordered was the stock blue PWM board.
 
-![adafruit](img/adafruit_pwm.jpg)
+<img src="img/adafruit_pwm.jpg" width="65%">
 
 Unfortunately, this board required soldering, and we were not given access to Cory Hall's soldering irons (despite asking really nicely ):
 
 So we decided to try soldering it ourselves using our own tools. And we accidentally destroyed the board, two weeks before the project was due.
 
-![sparkfun](img/sparkfun_pwm.png)
+<img src="img/sparkfun_pwm.png" width="65%">
 
 We bought a different PWM hat that did not require soldering, although we paid 15$ in shipping so that we could get it in time for our presentation deadline.
 
 It worked wonderfully, and allowed us to finally control our robot accurately.
 
 ![board](img/final1.png)
-![side view](img/final2.png)
+<img src="img/final2.jpg" width="65%">
 
 A few more oddities had to be sorted our, namely the mounting of our linear actuator (solved using rubber bands, twisty-ties, and velcro), and the stabilization of our robot base (solved using textbooks and lots of tape).
 
 Errors were also made in the height of our base, but were solved with the addition of counterweights and newly added base platform.
 
 ![the new base](img/new_base.png)
+
 Everything else also went through a similar, if slightly less impressive, design adventure. 
 
-![chess pieces](img/arucopiece.png)
+<img src="img/arucopiece.png" width="65%">
 
 As you may have noticed in our intial CAD, we had some pretty fancy chess pieces. As you also may have noticed in our final design, we gave up on those pretty fancy chess pieces.
 
@@ -117,9 +125,9 @@ This ended up failing due to a variety of errors:
 Instead, we used the servo angles we generated from our original URDF model, and then manually tuned each of them for each square on our final board in order to account for all of the inaccuracies. 
 
 # How well does it work?
-It works pretty well :)
+It works pretty well :) (click the image below to play the video)
 
-https://drive.google.com/file/d/16lzA9NrFH-yaUI_bPj8c9f4X90V0aXQi/view?usp=sharing
+[![image alt text](https://img.youtube.com/vi/xyAw2XI71Ow/0.jpg)](https://www.youtube.com/watch?v=xyAw2XI71Ow)
 
 We were able to accomplish all of our design goals, all the way from detecting pieces/moves to planning and executing smart responses automatically. 
 Unfortunately, getting to this point required a significant number of hacks in order to get this to work, and the overall system can still be more consistent, durable and robust. 
