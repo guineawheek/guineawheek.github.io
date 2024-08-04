@@ -45,3 +45,9 @@ For more on my thoughts on embedded rust, see [here](embedded_rust.md)
 
 
 ## the end result (WIP)
+
+<img src="img/gyro_final.jpg" width="50%">
+
+the final product has an analog out for ftc use and actual push terminals. it's a lot nicer to use. 
+
+it also has a secure CAN + USB bootloader I wrote entirely in Rust capable of encrypted OTA.
