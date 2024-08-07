@@ -255,8 +255,7 @@ Rather than fix this, since we weren't doing anything fancy like eigenvector or 
 it's very STM32-brained. probably because the most actively-developed HALs are for STM32s. 
 PACs are nice because they give you a zero-costish-abstraction over MMIO registers. Instead of worrying about the bit manipulation required to read or write some 5-bit segment of a register you can just refer to that register by name and use `modify` or `read` to deal with it. 
 
-I don't get why people say that C is "better" because it's "closer to hardware" because like, PACs also let you twiddle the same registers?? 
-In a way that's infinitely more readable?
+I don't get why people say that C is "better" because it's "closer to hardware" because like, PACs also let you twiddle the same registers??  In a way that's infinitely more readable? `svd2rust` is really good.
 
 There's one footgun though. `write` overwrites an entire 32-bit register while `modify` is what you actually typically want when you just want to flip a few select bits.
 
