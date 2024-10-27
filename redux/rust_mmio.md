@@ -1,5 +1,9 @@
 # Footguns with Embedded Rust and Memory-Mapped I/O
 
+## Update:
+
+Go read [this post](https://old.reddit.com/r/rust/comments/1gcz2ni/footguns_with_embedded_rust_and_memorymapped_io/lty8yo1/) by /u/AlphaModder as well. These problems are not unique to Rust but are something to be aware of more broadly.
+
 ## Background
 
 Let's say you've read all the puff pieces that big companies are putting out about and decide "hey, let's write some Rust code for our embedded projects!"
@@ -68,7 +72,7 @@ But then you hear about [`core::hint::black_box()`](https://doc.rust-lang.org/be
 
 Mostly. 
 
-## black_box isn't enough?
+## black_box isn't enough? Or is it?
 
 One of the functions you're testing is a bit longer. You expect it to take about 200 cycles based on some benchmarks that sum the time taken by multiple calls and averaging the numbers. 
 
@@ -127,6 +131,8 @@ let cycles = cortex_m::peripheral::DWT::cycle_count() - start;
 Still not what we want.
 
 ---
+
+Update: 
 
 
 After some flailing around, the only solution you seem to find that _consistently_ produces the correct placement is to write the first instance to a `static`:
