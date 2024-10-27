@@ -1,8 +1,8 @@
 # Footguns with Embedded Rust and Memory-Mapped I/O
 
-## Update:
+## Update
 
-Go read [this post](https://old.reddit.com/r/rust/comments/1gcz2ni/footguns_with_embedded_rust_and_memorymapped_io/lty8yo1/) by /u/AlphaModder as well. These problems are not unique to Rust but are something to be aware of more broadly.
+Go also read [this post](https://old.reddit.com/r/rust/comments/1gcz2ni/footguns_with_embedded_rust_and_memorymapped_io/lty8yo1/) by /u/AlphaModder as well. These problems are not unique to Rust but are something to be aware of more broadly.
 
 ## Background
 
