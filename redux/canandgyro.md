@@ -41,13 +41,13 @@ Nevertheless we still decided to give it a try for a few reasons:
 
 But perhaps the most compelling reason was because of RTIC, which is perhaps the best RTOS you can get without paying money.
 
-For more on my thoughts on embedded rust, see [here](embedded_rust.md)
-
 
 ## the end result (WIP)
 
 <img src="img/gyro_final.jpg" width="50%">
 
-the final product has an analog out for ftc use and actual push terminals. it's a lot nicer to use. 
+The final product has an analog out for ftc use and actual push terminals. It's a lot nicer to use. 
 
-it also has a secure CAN + USB bootloader I wrote entirely in Rust capable of encrypted OTA.
+It also has a secure CAN + USB bootloader I wrote entirely in Rust capable of encrypted OTA.
+
+This part is under construction; I will eventually write a more in-depth article about the process of shipping a Rust product.

@@ -18,14 +18,19 @@ I believe that embedded Rust definitely has potential for a strong future and I 
 
 ## [redux robotics](https://reduxrobotics.com)
 
-We sell high-performing electronics to FIRST Robotics Competition teams at affordable prices.
+As a part-time side project, we sell high-performing electronics to FIRST Robotics Competition teams at affordable prices.
 
 My responsibilities are product firmware, [user SDKs](https://apidocs.reduxrobotics.com/current/java/), [documentation](https://docs.reduxrobotics.com/canandmag/), internal tooling and debugging, and other stuff that's hard to put into words.
 
-* [canandgyro](redux/canandgyro.md) CAN-enabled IMU firmware **(Cortex-M4F, Rust/RTIC)**
-* [canandmag](https://shop.reduxrobotics.com/helium-canandmag) CAN-enabled PWM encoder firmware (esp32, freertos/c++)
+Firmware I have worked on includes so far:
 
-We are using and implementing embedded Rust across the stack and I have a lot of [random thoughts on the subject here.](redux/embedded_rust.md)
+* [Canandgyro](https://shop.reduxrobotics.com/boron-canandgyro) CAN-enabled high-performance IMU firmware shipping a Rust firmware **(Cortex-M4F, RTIC)**
+* [Canandmag](https://shop.reduxrobotics.com/helium-canandmag) CAN-enabled PWM encoder firmware (esp32, freertos/c++)
+
+We are using and implementing Rust across the stack. 
+I am in the process of writing a series of posts here describing some of the challenges we faced and ways we overcame them:
+ * [Footguns with Embedded Rust and Memory-Mapped I/O](redux/rust_mmio.md)
+
 
 In the course of Rust development we've had to make/fork some packages, including:
 * HALs for the devices we use in our products ([gd32c1x3-hal](https://github.com/guineawheek/gd32c1x3-hal), more TODO)
