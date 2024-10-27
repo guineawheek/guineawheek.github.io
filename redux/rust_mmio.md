@@ -22,13 +22,13 @@ So you (naively) write up the following benchmark function:
 
 ```rust
 use core::sync::atomic::{Ordering, compiler_fence};
-fn run_bench() {
+fn run_bench(value: f32) {
 
     compiler_fence(Ordering::SeqCst); // try and guarentee start happens before end
     let start = cortex_m::peripheral::DWT::cycle_count();
     compiler_fence(Ordering::SeqCst);
 
-    function_under_test();
+    function_under_test(value);
 
     compiler_fence(Ordering::SeqCst);
     let cycles = cortex_m::peripheral::DWT::cycle_count() - start;
@@ -60,7 +60,7 @@ subs r2, r2, r1
 
 In Rust terms, the compiler basically gave us:
 ```rust
-function_under_test();
+function_under_test(value);
 let start = cortex_m::peripheral::DWT::cycle_count();
 let cycles = cortex_m::peripheral::DWT::cycle_count() - start;
 ```
@@ -81,13 +81,13 @@ With your newfound knowledge of black_box, you now have a new benchmark function
 ```rust
 use core::sync::atomic::{Ordering, compiler_fence};
 use core::hint::black_box;
-fn run_bench() {
+fn run_bench(value: f32) {
 
     compiler_fence(Ordering::SeqCst); // try and guarentee start happens before end
     let start = cortex_m::peripheral::DWT::cycle_count();
     compiler_fence(Ordering::SeqCst);
 
-    black_box(big_function_under_test());
+    black_box(big_function_under_test(value));
 
     compiler_fence(Ordering::SeqCst);
     let cycles = cortex_m::peripheral::DWT::cycle_count() - start;
@@ -122,9 +122,9 @@ Despite the usage of `black_box`, the Rust compiler has decided to interleave th
 
 In Rust terms, we basically got:
 ```rust
-first_half_of_big_function_under_test();
+first_half_of_big_function_under_test(value);
 let start = cortex_m::peripheral::DWT::cycle_count();
-second_half_of_big_function_under_test();
+second_half_of_big_function_under_test(value);
 let cycles = cortex_m::peripheral::DWT::cycle_count() - start;
 ```
 
@@ -132,36 +132,31 @@ Still not what we want.
 
 ---
 
-Update: 
-
-
-After some flailing around, the only solution you seem to find that _consistently_ produces the correct placement is to write the first instance to a `static`:
+After some flailing around, we soon realize that we misread the documentation for `black_box` and that it may additionally help if we also wrap `value` in a `black_box` call too:
 
 ```rust
 use core::sync::atomic::{Ordering, compiler_fence};
 use core::hint::black_box;
 use core::cell::UnsafeCell;
 
-// SAFETY: presumably only a single thread is running run_bench from a single entry point
-static mut START: UnsafeCell<u32> = UnsafeCell::new(0);
-fn run_bench() {
+fn run_bench(value: f32) {
 
     compiler_fence(Ordering::SeqCst); // try and guarentee start happens before end
-    unsafe { *START.get_mut() = cortex_m::peripheral::DWT::cycle_count() };
+    let start = cortex_m::peripheral::DWT::cycle_count();
     compiler_fence(Ordering::SeqCst);
 
-    black_box(big_function_under_test());
+    black_box(big_function_under_test(black_box(value)));
 
     compiler_fence(Ordering::SeqCst);
-    let cycles = cortex_m::peripheral::DWT::cycle_count() - unsafe { *START.get() };
+    let cycles = cortex_m::peripheral::DWT::cycle_count() - start;
     compiler_fence(Ordering::SeqCst);
 
     defmt::println!("Cycle count of function: {}", cycles);
 }
 ```
 
-The compiled assembly shows that the start count gets written to the memory address of `START` before the function under test consistently, presumably because the Rust compiler realizes that the `static mut` could be mutated from different threads and thus can't make any rearrangements. 
-But is that really a guarentee you want to rely on?
+Running this code seems to fix the issue.
+
 
 ## So like, why _does_ this happen?
 
@@ -171,24 +166,50 @@ Well, they kinda did, but only to the extent that they ensured that `start <= en
 
 It doesn't guarentee anything about reordering anywhere else, including **before, into, or after the function we are trying to test.**
 
-The core of the issue is that **rustc doesn't (and can't) understand that the number of cycles of execution affects `CYCCNT`.** 
+Part of the issue is that **rustc doesn't (and can't) understand that the number of cycles of execution affects `CYCCNT`.** 
 It thinks you're just doing a memory operation on something like RAM where as long as `function_under_test()` doesn't touch that address, reordering the memory reads is fine. 
 But the `DWT` peripheral _isn't_ in RAM, it's a peripheral that happens to be accessed through memory load/store operations. It's being touched by forces outside the typical memory model. 
 It breaks invariants that you might expect of RAM, but isn't that just how all hardware peripherals work?
 
-I'm not a language designer, but perhaps we need some sort of `code_fence` that prevents reordering of calls past it. I don't know.
+~~I'm not a language designer, but perhaps we need some sort of `code_fence` that prevents reordering of calls past it. I don't know.~~
+EDIT: as /u/AlphaModder [pointed out on Reddit](https://old.reddit.com/r/rust/comments/1gcz2ni/footguns_with_embedded_rust_and_memorymapped_io/lty8yo1/), there are reasonable compiler reasons why this wouldn't be possible, linking [this SO post](https://stackoverflow.com/questions/37786547/enforcing-statement-order-in-c)
+
+`core::hint::black_box` seems to convince the compiler that the `function_under_test` very much Does have side effects in the context of `run_bench` and is to be treated as a volatile operation. 
+
+Both barriers are necessary, because the input fence prevents reads from before the function getting reordered downwards and the output fence prevents reads _after_ the function gettting reordered upwards.
+
+```rust
+compiler_fence(Ordering::SeqCst); 
+let start = cortex_m::peripheral::DWT::cycle_count(); // volatile read
+compiler_fence(Ordering::SeqCst); 
+
+// data input fence
+let tmp = black_box(value);
+// vvv volatile ops cannot be reordered from before the black_box into after it vvv
+
+let tmp = function_under_test(tmp);
+// ^^^ volatile ops cannot be reordered after the black_box into before it ^^^
+let output = black_box(tmp);
+
+
+compiler_fence(Ordering::SeqCst);
+let cycles = cortex_m::peripheral::DWT::cycle_count() - start;
+compiler_fence(Ordering::SeqCst);
+```
+
+There are still some potential edge cases that /u/AlphaModder notes, such as:
+* `function_under_test` must actually _depend_ on `value` and have its output affected by it
+* computations within `function_under_test` may still get reordered past the boundaries if they are not dependents of `value` or do not affect the value of `output`
+* it is still technically legal for the compiler to replace `function_under_test` with a lookup table generation function on the entire set of possible inputs before `start`, but this seems unlikely 
+
 
 ## Conclusions and broader implications
 
-Now this is a bit of a corner case that you really only run into trying to benchmark code on an embedded platform, especially since we're only taking reads of a peripheral that just counts upwards, and because for places that ordering _does_ matter, most MMIO peripherals will require multiple volatile reads/writes to peripherals such that `compiler_fence` is sufficient.
+Now this is a bit of a corner case that you really only run into trying to benchmark code on an embedded platform, especially since we're only taking reads of a peripheral that just counts upwards, and because for places that ordering _does_ matter, most MMIO peripherals will require multiple volatile reads/writes to peripherals such that `compiler_fence` alone is sufficient.
 
-But there are some worrying implications here for all of embedded and low-level development in Rust not just on these tiny microcontrollers but also for things like Linux kernel driver development because memory-mapped I/O accesses are generally considered the standard way to access hardware peripherals.
+But there are some potential implications here for all of embedded and low-level development in Rust not just on these tiny microcontrollers but also for things like Linux kernel driver development because memory-mapped I/O accesses are generally considered the standard way to access hardware peripherals.
 
-It seems less than ideal to have to look at disassembly to verify that your MMIO reads are happening in the right place all the time though, and I do think some way to do code fences is necessary. 
-Maybe the solution already exists in some RFC and I haven't looked hard enough, but if it does, please let me know.
-
-But for now, I guess I will just have to use statics and make sure the compiler isn't screwing me over.
-
+It seems less than ideal to have to look at disassembly to verify that your MMIO reads are happening in the right place all the time though, but for now it seems `black_box` will do for the cases that _do_ matter. 
 
 ## Shameless self-plug
 
