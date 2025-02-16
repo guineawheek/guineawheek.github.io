@@ -82,7 +82,8 @@ Fortunately, we have technology that can do like 90% of the work for you now.
 7. If a team has some outlier matches (good or bad), note how early or late in the match schedule they are.
    **Robots tend to get better later in the match schedule** and if a robot was broken but now works that team may be a sleeper pick.
    This is why teams that only pick based on cumulative averages tend to get obliterated in elims by teams that suddenly start working way better.
-8. Once you have some notable teams, eyeball their **auto and endgame category scores** to see how reliable those are. 
+8. Once you have some notable teams, eyeball their **auto and endgame category scores** to see how reliable and/or outstanding those are. 
+   Consistent autos become a must the later in the season you get and being able to perform extra endgame tasks (e.g. L3 climb) can offset or even augment lower teleop cycle counts but are easy to overlook.
 9. Make a **"team priority list"** ordered by who you would like to be with the most in elims.
 
 FTC teams don't play a ton of matches so you really do need to do a lot of eyeballing and preferably talking to the teams and examining their robots themselves.
