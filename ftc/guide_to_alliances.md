@@ -102,6 +102,7 @@ If a team says they're going to decline for advancement reasons? **Try to pick t
 It may seem awkward to do, but the worst thing they can do is say no.
 
 **Do not take it personally if a team declines you!** That's just how these things go. 
+Look at it this way; if all the other captains decline you, they can't pick each other (the "scorched earth" strategy), which should hopefully put you in a much stronger spot for elims when you picked that one really good team that isn't a captain.
 
 ## Getting picked as an alliance captain
 
