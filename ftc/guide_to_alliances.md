@@ -50,7 +50,7 @@ It may be tempting to pick that team that can do 10 specimens on the chamber (10
 However, if there is some robot that is _way_ better than you at sample (let's say they get 16 samples/128 points in high bucket), then you should pick that team and play specimen instead,
 because 128 points in high bucket + 80 points in specimens > 88 points in high bucket + 100 points in specimens.
 
-That's a 20 point difference right there!
+That's a **20 point difference (208 pts vs. 188 pts)** right there!
 
 You also want to check on reliability and scoring capability of factors like **autonomous** and **endgame**. 
 In ITD, not a lot of teams can do L3 hangs, but if they can manage 8 bucket cycles and an L3 hang, it's like they get a free 2 cycles.
