@@ -72,47 +72,57 @@ Good luck if you are in this scenario.
 The gold standard for this is full match scouting with some sort of analysis spreadsheet, but very few FTC teams have the resources to actually pull this off, not to mention pulling it off well.
 Fortunately, we have technology that can do like 90% of the work for you now. 
 
-1. Go to FTCScout.org
+1. Go to https://ftcscout.org
 2. Pull up your event
-3. Sort by "np OPR" to get a sense of who scores good.
+3. Sort by **"np OPR"** to get a sense of who scores good.
    This can also serve as a useful metric to determine when you should let another team do the task you're good at for you, teams that seem to have auto + endgame down, and stuff like that.
-4. Once you have a general sense, click on the "Insights" tab
-5. Sort all the matches by the primary metrics you care to pick for (e.g. "DC Sample").
+4. Once you have a general sense, click on the **"Insights"** tab
+5. Sort all the matches by the primary metrics you care to pick for (e.g. **"DC Sample"**).
    Click on the teams in the matches to highlight them and note teams that appear frequently high on the list.
 7. If a team has some outlier matches (good or bad), note how early or late in the match schedule they are.
-   Robots tend to get better later in the match schedule and if a robot was broken but now works that team may be a sleeper pick.
-8. Once you have some notable teams, eyeball their auto and endgame category scores to see how reliable those are. 
-9. Make a "team priority list" ordered by who you would like to be with the most in elims.
+   **Robots tend to get better later in the match schedule** and if a robot was broken but now works that team may be a sleeper pick.
+   This is why teams that only pick based on cumulative averages tend to get obliterated in elims by teams that suddenly start working way better.
+8. Once you have some notable teams, eyeball their **auto and endgame category scores** to see how reliable those are. 
+9. Make a **"team priority list"** ordered by who you would like to be with the most in elims.
 
-FTC teams don't play a ton of matches so you really do need to do a lot of eyeballing and preferably talking to the teams themselves.
+FTC teams don't play a ton of matches so you really do need to do a lot of eyeballing and preferably talking to the teams and examining their robots themselves.
 But you can get very far just by fiddling around with FTCScout even if you have zero match scouting.
 
 
 ## Picking teams as an alliance captain
 If you find yourself as an alliance captain who is now being asked to pick a team, **always pick in order of best team to play with that can still be picked even if you think they will decline.**
+
+Your alliance representative should always at least _know_ vaguely who to pick if you're suddenly called in as 5th or 6th captain.
+
 If a team is telling you they are broken and not to pick them?
 They might be lying so they can be picked by a later alliance. Use your judgement if you want to still pick them anyway.
 
-If a team says they're going to decline for advancement reasons? Pick them anyway so they can't defect on that promise.
-**Do not take it personally if a team declines you!** That's just how these things go. 
+If a team says they're going to decline for advancement reasons? **Try to pick them anyway so they can't defect on that promise.**
+It may seem awkward to do, but the worst thing they can do is say no.
 
-Your alliance representative should always at least _know_ vaguely who to pick if you're suddenly called in as 5th or 6th captain.
+**Do not take it personally if a team declines you!** That's just how these things go. 
 
 ## Getting picked as an alliance captain
 
 If you are going to be a captain, your alliance representative should probably know which teams they are going to accept invitations from and which they are going to decline.
-
 The basic question you want to ask for each higher ranked captain is **"Can I get to finals by accepting them, or will I have a better shot with the remaining pool of pickable teams if I decline?"**
-Another captain's compatibility with your team is complicated (and discussed earlier) but you should at least look at their OPR; you probably _shouldn't_ be accepting that captain with an OPR of 7 for example
+
+Ask yourself, **"What happens if these captains make optimal picks, and what happens if they don't?"** and hash out what teams are left for you to ally with in either scenario. 
+
+Another captain's compatibility with your team is complicated (and discussed earlier) but **you should at least look at their OPR as a ballpark metric;** you probably _shouldn't_ be accepting that captain with an OPR of 7 for example
 because that alliance is going to be worse than if you had declined and picked a team that can at least hang.
+
 
 ## Getting picked in general
 
 Alliance captain or not, however, you should **always shill to the teams ranked above you that you want to be picked by.**
 These can be teams all the way down to rank 6 or 7 in 4-alliance brackets or ranks 10 or 11 in 6-alliance brackets.
-This is an imperfect science but can help prevent suboptimal picks. 
+This is an imperfect science but can help prevent suboptimal picks or getting unpicked entirely.
+
+Unlike in the old 4-alliance format, you want to talk to **several different captains** ideally, because half of them might get picked by a higher captain and you can't just rely on 1st seed 2nd picking you if you don't get picked early.
 
 If you anticipate a captain that you want to be picked by getting potentially picked by a higher captain, consider **making the case for why they should decline and try picking you instead.**
-If a team you do not want to be picked by approaches you, consider **making the case why another team may be a better fit for them.** Avoid lying.
+If a team you do not want to be picked by approaches you, consider **making the case why another team may be a better fit for them.**
+Avoid lying in this scenario (and sometimes just being honest about your intentions at like, Champs where advancement isn't on the line may make them leave you alone).
 
-A lot of viable captains go into elims not really knowing how to pick, so **approaching them to actively guide the process** can get you a lot of leverage.
+At the qualifier and leagues level especially, a lot of viable captains go into elims not really knowing how to pick, so **approaching them to actively guide the process** can get you a lot of leverage.
