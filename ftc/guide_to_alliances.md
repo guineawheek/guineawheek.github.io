@@ -122,6 +122,7 @@ This is an imperfect science but can help prevent suboptimal picks or getting un
 Unlike in the old 4-alliance format, you want to talk to **several different captains** ideally, because half of them might get picked by a higher captain and you can't just rely on 1st seed 2nd picking you if you don't get picked early.
 
 If you anticipate a captain that you want to be picked by getting potentially picked by a higher captain, consider **making the case for why they should decline and try picking you instead.**
+
 If a team you do not want to be picked by approaches you, consider **making the case why another team may be a better fit for them.**
 Avoid lying in this scenario (and sometimes just being honest about your intentions at like, Champs where advancement isn't on the line may make them leave you alone).
 
