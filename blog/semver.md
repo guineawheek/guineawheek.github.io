@@ -111,34 +111,36 @@ But the SemVer doesn't tell you that; going to the project pages does.
 Similarly, `zip` and `which` have evidently had more API churn than either of these crates; but this doesn't necessarily imply they are badly written or badly managed. Which is the implication that people like to make if your SemVer major version gets too high.
 
 In ecosystems where package management systems let you upload pre-`1.0.0` software, SemVer alone **_cannot_** give you a guarantee on how mature the API actually is. You actually have to examine the project itself to make that determination.
-To that end, having that distinction in the SemVer spec itself seems spurious, and either a failure of the package ecosystem to allow 0.y.z software to be dependend upon or the SemVer spec for mismatching the actual expectations.
 
-You can't have it both ways; you either:
+To that end, having that distinction in the SemVer spec itself seems spurious.
+Thus, we must either:
 
-* accept SemVer as implied by its FAQ/as Tom wants it, and conclude the entire ecosystem is wrong for allowing `0.y.z` software to be in wide distribution or dependency use
+* accept SemVer as recommended by its FAQ/as Tom wants it, and conclude the entire ecosystem is wrong for allowing `0.y.z` software to be in wide distribution or dependency use
 * accept the existence of `0.y.z` software in popular circulation, leading to there ultimately being no real signalling difference between a popular dependency versioning itself `0.10.z` or `10.y.z` beyond which ranges of versions they are compatible with.
+  * ...after all, once again, SemVer didn't define the `1.0.0` release threshold; it just left it as as an FAQ recommendation.
 
 
-As establihshed previously, a Rust crate being "semantically" versioned `0.y.z` vs. `(x > 0).y.z` is ultimately meaningless beyond an API compatibility range. All it boils down to is having two namespaces of versioning with slightly different semantics involving backwards-compatible API changes: one with two digits and one with three.
+As establishhed previously, a Rust crate being "semantically" versioned `0.y.z` vs. `(x > 0).y.z` is ultimately meaningless beyond an API compatibility range. All it boils down to is having two namespaces of versioning with slightly different semantics involving backwards-compatible API changes: one with two digits and one with three.
 
 Thus, SemVer in Cargo:
-* can't tell you which of the `0.10.z` or `10.y.z` package is more mature.
-* can't tell you how big the API change between `0.10.z -> 0.11.0` versus `10.y.z -> 11.0.0` is.
+
+* can't tell you which of the `0.10.z` or `10.y.z` packages are more mature
+* can't tell you how big the API change between `0.10.z -> 0.11.0` versus `10.y.z -> 11.0.0` is
 * can only tell you that `0.10.z -> 0.11.0` and `10.y.z -> 11.0.0` are API-incompatible.
 
 But people love pretending SemVer can and should signal that additional information about API stability and maturity.
 
 ## So is the major number sacred or not?
 
-If I were to go back in time to change SemVer, I would probably define the line at which a 1.0.0 release comes out as something like:
+If I were to go back in time to change SemVer, I would probably define the line at which a `1.0.0` release comes out as something like:
 
 
 ```
 Software that is prepared for wide distribution MUST have a major version larger than 0
 ```
 
-and adjust expecations such that it is the norm that all package managers reject pre-`1.0.0` software from being uploaded.
-To that end, I take Tom Preston-Werner's position that the major version shouldn't be sacred if you're doing semver everything.
+and adjust expecations such that it is the norm that all package distribution systems reject pre-`1.0.0` software from being uploaded.
+To that end, I take Tom Preston-Werner's position that the major version shouldn't be sacred if you're doing SemVer for everything as Cargo does.
 
 After all, when you distribute software to the wider public, you don't control if other people will use it or not.
 You don't control whether or not its public API surface will be used to create a [spacebar heater.](https://xkcd.com/1172/) 
