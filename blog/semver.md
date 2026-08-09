@@ -76,11 +76,9 @@ If you're uploading to [crates.io](https://crates.io), that means:
 
 This sounds a lot like "production use", "dependent API", and "backwards compatibility concern" to me.
 
-## 1.0.0+ Is Not An Indicator Of API "Stability"
+## Are post-`1.0.0` APIs meant to be frozen forever?
 
-(In Rust, at least)
-
-The SemVer FAQ encourages software past `1.0.0` to be conservative in issuing breaking API changes:
+The SemVer spec itself doesn't answer this question, because it's Undefined. Its FAQ encourages software past `1.0.0` to be conservative in issuing breaking API changes:
 
 > **If even the tiniest backward incompatible changes to the public API require a major version bump, won’t I end up at version 42.0.0 very rapidly?**
 
@@ -89,15 +87,17 @@ The SemVer FAQ encourages software past `1.0.0` to be conservative in issuing br
 > The cost that must be incurred to upgrade can be significant.
 > Having to bump major versions to release incompatible changes means you’ll think through the impact of your changes, and evaluate the cost/benefit ratio involved.
 
-And there's this implication/cultural norm (which is sometimes outright stated in comment sections) that if you're past your `1.0.0`, you shouldn't intend to change your API in backwards-incompatible ways much, if ever. 
+In Rust, however, there's this implication/cultural norm (which is sometimes outright stated) that if a crate is past `1.0.0`, it shouldn't intend to change your API in backwards-incompatible ways much, if ever. 
 
 * Some projects recognize they can achieve this bar and thus bump themselves to `1.0.0`.
 * Other projects don't feel like they can _ever_ achieve this and thus stay in the `0.y` range indefinitely...but still end up paying special attention towards backwards-incompatible changes anyway in determining whether to bump to `0.(y+1).0` or `0.y.(z+1)`. 
-* The original author of SemVer, Tom Preston-Werner, thinks that [major version numbers are not sacred](https://tom.preston-werner.com/2022/05/23/major-version-numbers-are-not-sacred) and that there shouldn't be shame in having a high major version.
+* Fewer projects think they have it frozen, then realize that they actually did need to issue a couple more API-breaking changes and increased the major version appropriately.
+* In a few extreme cases, projects end up subverting SemVer for small API incompatibilities to hopefully bury the shame of needing to bump a major version number that may imply immaturity, or defer said changes for years.
+* The original author of SemVer, Tom Preston-Werner, thinks that [major version numbers are not sacred](https://tom.preston-werner.com/2022/05/23/major-version-numbers-are-not-sacred) and that there shouldn't be shame in having a high major version, and that these APIs aren't meant to be frozen forever at all.
 
-----
+## `0.y.z` vs. `>=1.0.0` Is Not An Indicator Of API "Stability"
 
-And ultimately, it seems that actual in-practice API "stability" isn't really correlated with being `0.y.z` or post-`1.0.0` at all:
+But ultimately, actual in-practice API "stability" isn't really correlated with being `0.y.z` or post-`1.0.0` at all:
 
 * `log`, a Rust Project-maintained crate, has been `0.4.x` for nearly a decade. It has over a billion downloads.
 * `libc` another Rust Project-maintained crate, has been at `0.2` since 2015. It has a [roadmap to 1.0](https://github.com/rust-lang/libc/milestone/1) that has been ongoing for nearly as long.
@@ -106,9 +106,12 @@ And ultimately, it seems that actual in-practice API "stability" isn't really co
 
 It's hard to run desktop production Rust code without running into crates like `log` or `libc`, and they are some of the most stable crates in the entire ecosystem.
 
-But the SemVer doesn't tell you that; going to the project pages does. 
 
 Similarly, `zip` and `which` have evidently had more API churn than either of these crates; but this doesn't necessarily imply they are badly written or badly managed. Which is the implication that people like to make if your SemVer major version gets too high.
+
+But the SemVer doesn't tell you that; going to the project pages does. 
+
+## 
 
 In ecosystems where package management systems let you upload pre-`1.0.0` software, SemVer alone **_cannot_** give you a guarantee on how mature the API actually is. You actually have to examine the project itself to make that determination.
 
@@ -120,7 +123,7 @@ Thus, we must either:
   * ...after all, once again, SemVer didn't define the `1.0.0` release threshold; it just left it as as an FAQ recommendation.
 
 
-As establishhed previously, a Rust crate being "semantically" versioned `0.y.z` vs. `(x > 0).y.z` is ultimately meaningless beyond an API compatibility range. All it boils down to is having two namespaces of versioning with slightly different semantics involving backwards-compatible API changes: one with two digits and one with three.
+As established previously, a Rust crate being "semantically" versioned `0.y.z` vs. `(x > 0).y.z` is ultimately meaningless beyond an API compatibility range. All it boils down to is having two namespaces of versioning with slightly different semantics involving backwards-compatible API changes: one with two digits and one with three.
 
 Thus, SemVer in Cargo:
 
