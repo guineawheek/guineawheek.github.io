@@ -137,35 +137,35 @@ If I were to go back in time to change SemVer, I would probably define the line 
 Software that is prepared for wide distribution MUST have a major version larger than 0
 ```
 
-and adjust expecations such that it is the norm that all package managers reject pre-1.0.0 software from being uploaded.
+and adjust expecations such that it is the norm that all package managers reject pre-`1.0.0` software from being uploaded.
 To that end, I take Tom Preston-Werner's position that the major version shouldn't be sacred if you're doing semver everything.
 
 After all, when you distribute software to the wider public, you don't control if other people will use it or not.
 You don't control whether or not its public API surface will be used to create a [spacebar heater.](https://xkcd.com/1172/) 
-So let's just pick the conservative option, and semantically version our software as 1.0.0+ and we get to use all three digits whenever we add things that don't break the public API.
+So let's just pick the conservative option, and semantically version our software as `>=1.0.0` and we get to use all three digits whenever we add things that don't break the public API.
 
 ## Splitting the major version into two components
 
 But people don't really agree that the major version isn't sacred, apparently. 
-Again, many projects like `rust-lang/libc` view 1.0.0 as a huge developmental milestone, and having big major version numbers seems both noisy to many people and an indicator of poor quality. 
+Again, many projects like `rust-lang/libc` view `1.0.0` as a huge developmental milestone, and having big major version numbers seems both noisy to many people and an indicator of poor quality. 
 
 But at the same time, the major number is supposed to also be just an API compatibility break number.
 It was never intended to be sacred. I don't think you can have it both ways.
 
 I think there's a good case to have a fourth "marketing" or "epoch" number. Sometimes you're wrapping some standard that's year-based, because it's used in the context of an environment that refreshes yearly, like F1 regulations:
 
-```
+```toml
 formula-one-regulations = "2027.1.0.0"
 ```
 
-To preserve API compatibility guarantees, you treat "2027.1" as a composite "major number"; for example "2027.1.0.0" would be incompatible with "2026.1.0.0" as 2027.1 != 2026.1.
+To preserve API compatibility guarantees, you treat `2027.1` as a composite "major number"; for example `2027.1.0.0` would be incompatible with `2026.1.0.0` as `2027.1 != 2026.1`.
 [Haskell's package versioning policy](https://pvp.haskell.org/) basically does this exact system, while also encoding API compatibility and breakage.
 
 The other thing you can do with this is use this "marketing" number to signal when you reach some major developmental milestone; be it "this is the productionizable release" or "this is a new generation of this software that will be non-trivial to port to." You bump it purely as API milestones, and you don't have any expectations of previous generation software compatibility; hence why it's considered part of the "major version."
 
 You could hack your way into implementing this into existing SemVer systems by just having an obscenely large major version, e.g.
 
-```
+```toml
 formula-one-regulations = "20270001.0.0"
 ```
 
